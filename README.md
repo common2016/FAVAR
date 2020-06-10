@@ -5,7 +5,7 @@
 ## 安装
 
 ```R
-devtools::install_gitlab('common2016/FAVAR')
+devtools::install_github('common2016/FAVAR')
 ```
 
 正在开发中，初步已经可用，还在添加更多丰富的功能。

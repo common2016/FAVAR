@@ -27,11 +27,12 @@ BayesVAR <- function(data, plag =2, iter = 10000, burnin = 5000, prior = 'none',
   if (prior %in% 'none'){
     a_mu_prior <- matrix(0, m) # Vector of prior parameter means
     a_v_i_prior <- diag(0, m) # Inverse of the prior covariance matrix
+  }else if (prior %in% 'mn'){
 
-    u_sigma_df_prior <- 0 # Prior degrees of freedom
-    u_sigma_scale_prior <- diag(0, k) # Prior covariance matrix
-    u_sigma_df_post <- t + u_sigma_df_prior # Posterior degrees of freedom
   }
+  u_sigma_df_prior <- 0 # Prior degrees of freedom
+  u_sigma_scale_prior <- diag(0, k) # Prior covariance matrix
+  u_sigma_df_post <- t + u_sigma_df_prior # Posterior degrees of freedom
 
   # Initial values
   u_sigma_i <- diag(.00001, k)

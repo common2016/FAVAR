@@ -16,7 +16,7 @@ if (FALSE){
 }else load('data-raw/regdata.rdata')
 
 fit <- FAVAR(Y, X, slowcode,fctmethod = 'BBE', nrep = 500, nburn = 100, K = 2, plag = 2, nhor = 20)
-class(fit)
+
 
 irfFAVAR(fit,118)
 # usethis::use_data(xdata, overwrite = TRUE)

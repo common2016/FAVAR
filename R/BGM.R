@@ -40,7 +40,7 @@ BGM <- function(X,R, K = 2,tolerance = 0.001, nmax = 100){
 
     # max iterations
     if (i > nmax) {
-      message("reach max iterations, PCs don't converge")
+      message("reach max iterations when extracting factors, PCs don't converge")
       break()
     }
   }

@@ -24,7 +24,7 @@
 #'
 #' @import foreach
 #' @export
-FAVAR <- function(Y, X, slowcode,standerze = TRUE, fctmethod = 'BBE',
+FAVAR <- function(Y, X, fctmethod = 'BBE', slowcode,standerze = TRUE,
                   varprior = 'none',nrep = 15000, nburn = 5000, K = 2, plag = 2, nhor = NULL, delta = 2.73,
                   ncores = 1){
 
@@ -39,12 +39,12 @@ FAVAR <- function(Y, X, slowcode,standerze = TRUE, fctmethod = 'BBE',
   # Lf <- ExtrPC(X_st,K)$Lf
 
   # extract factors
-  xslow <- X[,slowcode]
-  Fslow0 <- ExtrPC(xslow,K)$F0
   if (fctmethod %in% 'BBE'){
+    xslow <- X[,slowcode]
+    Fslow0 <- ExtrPC(xslow,K)$F0
     Fr0 <- facrot(F0, matrix(Y[,ncol(Y)],ncol = 1),Fslow0)
   }else if (fctmethod %in% 'BGM'){
-    Fr0 <- BGM(X, Y[,ncol(Y)], niter = 40)
+    Fr0 <- BGM(X, Y[,ncol(Y)], K = K)
   }
 
   Y = scale(Y,center = FALSE)
@@ -89,9 +89,9 @@ FAVAR <- function(Y, X, slowcode,standerze = TRUE, fctmethod = 'BBE',
     cl <- parallel::makeCluster(ncores)
     doParallel::registerDoParallel(cl)
     ans <- zeros(ncol(Y) + ncol(X),nhor)
-    imp <- foreach::foreach (i = 1:ncol(varrlt$A), .packages = c('matlab','MyFun','tidyverse')) %dopar% {
+    imp <- foreach::foreach (i = 1:ncol(varrlt$A), .packages = c('matlab','FAVAR','tidyverse')) %dopar% {
       PHI_mat <- matrix(varrlt$A[,i],nrow = p, byrow = FALSE)
-      macoef <- ar2ma(PHI_mat, p = plag, n = nhor, CharValue = FALSE)
+      macoef <- FAVAR::ar2ma(PHI_mat, p = plag, n = nhor, CharValue = FALSE)
 
       shock <- matrix(varrlt$sigma[,i],nrow = p, byrow = FALSE) %>% chol() %>% t()
       d <- diag(diag(shock))

@@ -33,6 +33,7 @@ summary.favar <- function(favar, xvar = NULL){
      ans <- ans[-1,]
      rownames(ans) <- rownames(favar$varrlt$sumrlt$varcoef)
      print(ans)
+     cat('-------------\n')
     }
   }
 }

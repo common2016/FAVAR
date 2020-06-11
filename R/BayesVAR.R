@@ -1,6 +1,7 @@
 #' Bayesian Estimation of VAR
 #'
 #' Estimate a VAR base on bayesian method
+#'
 #' @param data a matrix which include all endogenous variables in VAR
 #' @param plag a lag order in VAR
 #' @param iter iterations of the MCMC

@@ -2,9 +2,9 @@
 % Please edit documentation in R/BGM.R
 \name{BGM}
 \alias{BGM}
-\title{Separate \code{R} From \code{X}}
+\title{Separate \eqn{R} From \eqn{X}}
 \usage{
-BGM(X, R, K = 2, niter = 10)
+BGM(X, R, K = 2, tolerance = 0.001, nmax = 100)
 }
 \arguments{
 \item{X}{a large matrix from which principle components are extrated.}
@@ -13,8 +13,27 @@ BGM(X, R, K = 2, niter = 10)
 
 \item{K}{the number of extracted princple components.}
 
-\item{niter}{the iterations, see details.}
+\item{tolerance}{the difference between factors when iterating.}
+
+\item{nmax}{the max iterations, see details.}
+}
+\value{
+the first K principa components, i.e. \eqn{F_t^{(n)}}.
 }
 \description{
-Separate \code{R} From \code{X}
+\code{X} may include some information corralted with \code{R}. The function
+extract factors from \code{X} which is not corralated with \code{R} by iteration
+based on Boivin et al. (2009).
+}
+\details{
+The algorithm is as follows:
+\enumerate{
+\item Extract the first K principal components noted \eqn{F_t^{(0)}} from \code{X}.
+\item Regress \code{X} on \eqn{F_t^{(0)}} and \eqn{R_t}, and get regression
+coefficients \eqn{\beta_R^{(0)}} of \eqn{R_t}.
+\item compute \eqn{X_0^{(0)} = X_t- R_t \beta_R}.
+\item Extract the first K principal components noted \eqn{F_t^{(1)}} from
+\code{X_t^{(0)}}.
+\item repeat step 2 - step 4 until precision you want.
+}
 }

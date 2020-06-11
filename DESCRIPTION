@@ -17,3 +17,5 @@ RoxygenNote: 7.1.0
 Imports: 
     matlab,
     ggplot2
+Depends: 
+    R (>= 2.10)

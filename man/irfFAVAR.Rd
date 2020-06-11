@@ -6,6 +6,9 @@
 \usage{
 irfFAVAR(fit, nvar = 116)
 }
+\value{
+a object from \code{ggplot2::ggplot}.
+}
 \description{
 Impulse Response Function for FAVAR
 }

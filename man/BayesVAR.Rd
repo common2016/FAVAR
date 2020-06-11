@@ -21,7 +21,9 @@ BayesVAR(
 \item{iter}{iterations of the MCMC}
 
 \item{prior}{prior setting for VAR}
+
+\item{type}{\code{'none','drift'} or \code{'trend'}}
 }
 \description{
-Bayesian Estimation of VAR
+Estimate a VAR base on bayesian method
 }

@@ -1,11 +1,15 @@
 #' FAVAR
 #'
-#' Estimate a FAVAR by Bernanke et al. (2005).
+#' Estimate a FAVAR model by Bernanke et al. (2005).
 #'
+#' @param Y a matrix. If only one coloumn, don't set as a vector.
+#' @param X a matrix. A large data set. see details.
 #' @param slowcode a logical vector
 #' @param standerze logical value, wheather standarze X and Y
 #' @param fctmethod \code{'BBE'} or \code{'BGM'}. \code{'BBE'}(default) means the fators extracted method by Bernanke et al. (2005),
 #' and \code{'BGM'} means the fators extracted method by Boivin et al. (2009).
+#' @param \code{'none'} or \code{'mn'}, varprior prior setting for VAR. \code{'none'} means noninformative prior, and
+#' \code{'mn'} means Minnesota prior.
 #' @param K number of factors.
 #' @param plag lag order in the VAR equation
 #' @param nhor IRF horizon, default is \code{NULL}
@@ -18,16 +22,15 @@
 #'  from Disaggregated US Data. American Economic Review, 2009. 99(1): p. 350-384.
 #'
 #' @export
-FAVAR <- function(Y, X, slowcode,standerze = TRUE, fctmethod = 'BBE', nrep = 15000, nburn = 5000, K = 2, plag = 2, nhor = NULL, delta = 2.73){
+FAVAR <- function(Y, X, slowcode,standerze = TRUE, fctmethod = 'BBE',
+                  varprior = 'none',nrep = 15000, nburn = 5000, K = 2, plag = 2, nhor = NULL, delta = 2.73){
 
-  #
   p <- K + ncol(Y)
+  # standardize X
   if (standerze){
     X <- scale(X)
     Y <- scale(Y)
   }
-
-  # standardize X
 
   F0 <- ExtrPC(X,K)$F0
   # Lf <- ExtrPC(X_st,K)$Lf
@@ -43,7 +46,7 @@ FAVAR <- function(Y, X, slowcode,standerze = TRUE, fctmethod = 'BBE', nrep = 150
 
   Y = scale(Y,center = FALSE)
 
-  # For 2 equation
+  # For 2 equations
   XY <-  cbind(X,Y)
   FY <- cbind(Fr0, Y)
 
@@ -51,9 +54,9 @@ FAVAR <- function(Y, X, slowcode,standerze = TRUE, fctmethod = 'BBE', nrep = 150
   SIGMA <- (t(XY - FY %*% t(L)) %*% (XY - FY %*% t(L)))/nrow(Y)
   SIGMA <- diag(diag(SIGMA))
 
+  # browser()
   Li_prvar <- 4 * matlab::eye(p) # prior on Li ~ N(o,I)
   a <- b <- 0.01 # prior on SIGMA ~ iG(a,b)
-  # browser()
 
   # X = F + Y: sampling
   Lamb <- array(0,dim = c(nrep,p+1,ncol(X)))
@@ -61,13 +64,18 @@ FAVAR <- function(Y, X, slowcode,standerze = TRUE, fctmethod = 'BBE', nrep = 150
     meddata <- data.frame(dep = X[,i]) %>% cbind(as.data.frame(FY))
     ans <- MCMCpack::MCMCregress(dep ~ .-1, data = meddata, burnin = nburn, mcmc = nrep,
                                  B0 = Li_prvar, sigma.mu = SIGMA[i,i], c0 = a, d0 = b,
-                                 b0 = matrix(0, 5))
+                                 b0 = 0)
     Lamb[,,i] <- ans
   }
 
   # VAR: sampling
   z <- ts(FY,1,nrow(FY))
-  varrlt <- BayesVAR(z, plag, iter = nrep+nburn, burnin = nburn, prior = 'none', type = 'none')
+  ifelse (is.null(colnames(Y)),
+          colnames(z) <- c(paste('factor',as.character(1:K),sep = ''),paste('Y',as.character(1:ncol(Y)),sep = '')),
+          colnames(z) <- c(paste('factor',as.character(1:K),sep = ''),colnames(Y)))
+
+  # browser()
+  varrlt <- BayesVAR(z, plag, iter = nrep+nburn, burnin = nburn, prior = varprior, type = 'none')
 
   # compute IRF?
   imp <- NULL

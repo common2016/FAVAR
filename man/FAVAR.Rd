@@ -10,6 +10,7 @@ FAVAR(
   slowcode,
   standerze = TRUE,
   fctmethod = "BBE",
+  varprior = "none",
   nrep = 15000,
   nburn = 5000,
   K = 2,
@@ -23,14 +24,17 @@ FAVAR(
 
 \item{standerze}{logical value, wheather standarze X and Y}
 
-\item{fctmethod}{\code{'BBE'} or \code{'BGM'}. \code{'BBE'} means the method by Bernanke et al. (2005),
-and \code{'BGM'} means the method by Boivin et al. (2009).}
+\item{fctmethod}{\code{'BBE'} or \code{'BGM'}. \code{'BBE'}(default) means the fators extracted method by Bernanke et al. (2005),
+and \code{'BGM'} means the fators extracted method by Boivin et al. (2009).}
 
-\item{K}{number of factors}
+\item{K}{number of factors.}
 
 \item{plag}{lag order in the VAR equation}
 
 \item{nhor}{IRF horizon, default is \code{NULL}}
+
+\item{\code{'none'}}{or \code{'mn'}, varprior prior setting for VAR. \code{'none'} means noninformative prior, and
+\code{'mn'} means Minnesota prior.}
 }
 \description{
 Estimate a FAVAR by Bernanke et al. (2005).

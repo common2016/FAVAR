@@ -19,20 +19,24 @@ BayesVAR <- function(data, plag =2, iter = 10000, burnin = 5000, prior = 'none',
   u_sigma_freq <- tcrossprod(u_freq) / (ncol(y) - nrow(x))
   store <- iter - burnin
 
-  t <- ncol(y) # Number of observations
+  tnum <- ncol(y) # Number of observations
   k <- nrow(y) # Number of endogenous variables
   m <- k * nrow(x) # Number of estimated coefficients
 
-  # Set (uninformative) priors
+  # Set priors
+
+
   if (prior %in% 'none'){
     a_mu_prior <- matrix(0, m) # Vector of prior parameter means
     a_v_i_prior <- diag(0, m) # Inverse of the prior covariance matrix
   }else if (prior %in% 'mn'){
-
+    ans <- minnesota_prior(data,0.7,1)
+    a_mu_prior <- ans$mu
+    a_v_i_prior <- ans$v_i
   }
   u_sigma_df_prior <- 0 # Prior degrees of freedom
   u_sigma_scale_prior <- diag(0, k) # Prior covariance matrix
-  u_sigma_df_post <- t + u_sigma_df_prior # Posterior degrees of freedom
+  u_sigma_df_post <- tnum + u_sigma_df_prior # Posterior degrees of freedom
 
   # Initial values
   u_sigma_i <- diag(.00001, k)
@@ -59,5 +63,16 @@ BayesVAR <- function(data, plag =2, iter = 10000, burnin = 5000, prior = 'none',
       draws_sigma[, draw - burnin] <- u_sigma
     }
   }
-  return(list(A = draws_a, sigma = draws_sigma))
+  # summarize results
+  ans <- coda::mcmc(t(draws_a)) %>% summary()
+  varcoef <- matrix(ans$statistics[,'Mean'], nrow = k)
+  varse <- matrix(ans$statistics[,'Naive SE'], nrow = k)
+  q25 <- matrix(ans$quantiles[,'2.5%'], nrow = k)
+  q975 <- matrix(ans$quantiles[,'97.5%'], nrow = k)
+  colnames(q25) <- colnames(q975) <- colnames(varcoef) <- colnames(varse) <- colnames(A_freq)
+  rownames(q25) <- rownames(q975) <- rownames(varcoef) <- rownames(varse) <- rownames(A_freq)
+  # browser()
+  return(list(A = draws_a, sigma = draws_sigma,
+              sumrlt = list(varcoef = varcoef, varse = varse,
+                            q25 = q25, q975 = q975)))
 }

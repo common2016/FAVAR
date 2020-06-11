@@ -13,6 +13,7 @@
 #' @param K number of factors.
 #' @param plag lag order in the VAR equation
 #' @param nhor IRF horizon, default is \code{NULL}
+#' @param ncores the number of CPU cores in parallel computations.
 #'
 #' @references
 #' [1] Bernanke, B.S., J. Boivin and P. Eliasz, Measuring the Eeefects of Monetary Policy:
@@ -21,9 +22,11 @@
 #' [2] Boivin, J., M.P. Giannoni and I. Mihov, Sticky Prices and Monetary Policy: Evidence
 #'  from Disaggregated US Data. American Economic Review, 2009. 99(1): p. 350-384.
 #'
+#' @import foreach
 #' @export
 FAVAR <- function(Y, X, slowcode,standerze = TRUE, fctmethod = 'BBE',
-                  varprior = 'none',nrep = 15000, nburn = 5000, K = 2, plag = 2, nhor = NULL, delta = 2.73){
+                  varprior = 'none',nrep = 15000, nburn = 5000, K = 2, plag = 2, nhor = NULL, delta = 2.73,
+                  ncores = 1){
 
   p <- K + ncol(Y)
   # standardize X
@@ -54,7 +57,7 @@ FAVAR <- function(Y, X, slowcode,standerze = TRUE, fctmethod = 'BBE',
   SIGMA <- (t(XY - FY %*% t(L)) %*% (XY - FY %*% t(L)))/nrow(Y)
   SIGMA <- diag(diag(SIGMA))
 
-  # browser()
+
   Li_prvar <- 4 * matlab::eye(p) # prior on Li ~ N(o,I)
   a <- b <- 0.01 # prior on SIGMA ~ iG(a,b)
 
@@ -74,8 +77,8 @@ FAVAR <- function(Y, X, slowcode,standerze = TRUE, fctmethod = 'BBE',
           colnames(z) <- c(paste('factor',as.character(1:K),sep = ''),paste('Y',as.character(1:ncol(Y)),sep = '')),
           colnames(z) <- c(paste('factor',as.character(1:K),sep = ''),colnames(Y)))
 
-  # browser()
-  varrlt <- BayesVAR(z, plag, iter = nrep+nburn, burnin = nburn, prior = varprior, type = 'none')
+
+  varrlt <- BayesVAR(z, plag, iter = nrep+nburn, burnin = nburn, prior = varprior, type = 'none',ncores = ncores)
 
   # compute IRF?
   imp <- NULL
@@ -83,8 +86,10 @@ FAVAR <- function(Y, X, slowcode,standerze = TRUE, fctmethod = 'BBE',
     # Chol dev
     shock_init <- diag(c(zeros(1,p-1), 1/delta)) # in terms of standard deviation, identification is recursive
     # initialize
-    imp <- zeros(nrep,ncol(Y) + ncol(X),nhor)
-    for (i in 1:ncol(varrlt$A)) {
+    cl <- parallel::makeCluster(ncores)
+    doParallel::registerDoParallel(cl)
+    ans <- zeros(ncol(Y) + ncol(X),nhor)
+    imp <- foreach::foreach (i = 1:ncol(varrlt$A), .packages = c('matlab','MyFun','tidyverse')) %dopar% {
       PHI_mat <- matrix(varrlt$A[,i],nrow = p, byrow = FALSE)
       macoef <- ar2ma(PHI_mat, p = plag, n = nhor, CharValue = FALSE)
 
@@ -107,10 +112,11 @@ FAVAR <- function(Y, X, slowcode,standerze = TRUE, fctmethod = 'BBE',
         imp_m[,ij] <- impresp[,jj]
       }
 
-      imp[i,1:ncol(X),] <- t(Lamb[i,1:p,]) %*% imp_m
-      imp[i,(dim(imp)[2]-2):dim(imp)[2],] <- imp_m[(nrow(imp_m)-2):nrow(imp_m),]
+      ans[1:ncol(X),] <- t(Lamb[i,1:p,]) %*% imp_m
+      ans[(nrow(ans)-ncol(Y)+1):nrow(ans),] <- imp_m[(nrow(imp_m)-ncol(Y)+1):nrow(imp_m),]
+      ans
     }
-    imp <- imp[,,-1]
+    parallel::stopCluster(cl)
   }
   rlt <- list(Lamb = Lamb, varrlt = varrlt, imp = imp)
   class(rlt) <- 'favar'

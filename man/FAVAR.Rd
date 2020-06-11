@@ -16,10 +16,15 @@ FAVAR(
   K = 2,
   plag = 2,
   nhor = NULL,
-  delta = 2.73
+  delta = 2.73,
+  ncores = 1
 )
 }
 \arguments{
+\item{Y}{a matrix. If only one coloumn, don't set as a vector.}
+
+\item{X}{a matrix. A large data set. see details.}
+
 \item{slowcode}{a logical vector}
 
 \item{standerze}{logical value, wheather standarze X and Y}
@@ -33,11 +38,13 @@ and \code{'BGM'} means the fators extracted method by Boivin et al. (2009).}
 
 \item{nhor}{IRF horizon, default is \code{NULL}}
 
+\item{ncores}{the number of CPU cores in parallel computations.}
+
 \item{\code{'none'}}{or \code{'mn'}, varprior prior setting for VAR. \code{'none'} means noninformative prior, and
 \code{'mn'} means Minnesota prior.}
 }
 \description{
-Estimate a FAVAR by Bernanke et al. (2005).
+Estimate a FAVAR model by Bernanke et al. (2005).
 }
 \references{
 \link{1} Bernanke, B.S., J. Boivin and P. Eliasz, Measuring the Eeefects of Monetary Policy:

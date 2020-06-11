@@ -10,7 +10,8 @@ BayesVAR(
   iter = 10000,
   burnin = 5000,
   prior = "none",
-  type = "none"
+  type = "none",
+  ncores = 1
 )
 }
 \arguments{

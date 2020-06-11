@@ -6,8 +6,14 @@
 #' @export
 irfFAVAR <- function(fit, nvar = 116){
   if (!class(fit) %in% 'favar') stop('fit must be from FAVAR funciton')
+  # list as array
+  ans <- array(0,dim = c(length(fit$imp),nrow(fit$imp[[1]]),ncol(fit$imp[[1]])))
+  for (i in 1:length(fit$imp)) {
+    ans[i,,] <- fit$imp[[i]]
+  }
+  ans <- ans[,,-1]
 
-  irf <- fit$imp[,nvar,]
+  irf <- ans[,nvar,]
   picdata <- data.frame(irf = apply(irf, 2, median),
                         up = apply(irf, 2, quantile, probs = 0.9),
                         dw = apply(irf, 2, quantile, probs = 0.1))

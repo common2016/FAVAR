@@ -9,7 +9,8 @@
 #' @param type \code{'none','drift'} or \code{'trend'}
 #' @import bvartools
 #' @export
-BayesVAR <- function(data, plag =2, iter = 10000, burnin = 5000, prior = 'none', type = 'none'){
+BayesVAR <- function(data, plag =2, iter = 10000, burnin = 5000, prior = 'none', type = 'none',
+                     ncores = 1){
   data <- gen_var(data, p = plag, deterministic = type)
   y <- data$Y
   x <- data$Z
@@ -24,8 +25,6 @@ BayesVAR <- function(data, plag =2, iter = 10000, burnin = 5000, prior = 'none',
   m <- k * nrow(x) # Number of estimated coefficients
 
   # Set priors
-
-
   if (prior %in% 'none'){
     a_mu_prior <- matrix(0, m) # Vector of prior parameter means
     a_v_i_prior <- diag(0, m) # Inverse of the prior covariance matrix
@@ -42,12 +41,10 @@ BayesVAR <- function(data, plag =2, iter = 10000, burnin = 5000, prior = 'none',
   u_sigma_i <- diag(.00001, k)
   u_sigma <- solve(u_sigma_i)
 
-  # Data containers for posterior draws
-  draws_a <- matrix(NA, m, store)
-  draws_sigma <- matrix(NA, k^2, store)
-
   # Start Gibbs sampler
-  for (draw in 1:iter) {
+  cl <- parallel::makeCluster(ncores)
+  doParallel::registerDoParallel(cl)
+  draw_a_sigma <- foreach (draw = 1:iter,.packages = c('bvartools')) %dopar% {
     # Draw conditional mean parameters
     a <- post_normal(y, x, u_sigma_i, a_mu_prior, a_v_i_prior)
 
@@ -59,10 +56,21 @@ BayesVAR <- function(data, plag =2, iter = 10000, burnin = 5000, prior = 'none',
 
     # Store draws
     if (draw > burnin) {
-      draws_a[, draw - burnin] <- a
-      draws_sigma[, draw - burnin] <- u_sigma
+      ans <- list(a = a,u_sigma = u_sigma)
     }
   }
+  parallel::stopCluster(cl)
+
+  # list as matrix
+  draws_a <- matrix(NA, m, store)
+  draws_sigma <- matrix(NA, k^2, store)
+  for (draw in 1:iter) {
+    if (draw > burnin) {
+      draws_a[, draw - burnin] <- draw_a_sigma[[draw]]$a
+      draws_sigma[, draw - burnin] <- draw_a_sigma[[draw]]$u_sigma
+    }
+  }
+
   # summarize results
   ans <- coda::mcmc(t(draws_a)) %>% summary()
   varcoef <- matrix(ans$statistics[,'Mean'], nrow = k)
@@ -71,7 +79,7 @@ BayesVAR <- function(data, plag =2, iter = 10000, burnin = 5000, prior = 'none',
   q975 <- matrix(ans$quantiles[,'97.5%'], nrow = k)
   colnames(q25) <- colnames(q975) <- colnames(varcoef) <- colnames(varse) <- colnames(A_freq)
   rownames(q25) <- rownames(q975) <- rownames(varcoef) <- rownames(varse) <- rownames(A_freq)
-  # browser()
+
   return(list(A = draws_a, sigma = draws_sigma,
               sumrlt = list(varcoef = varcoef, varse = varse,
                             q25 = q25, q975 = q975)))

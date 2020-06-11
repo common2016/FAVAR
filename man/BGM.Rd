@@ -21,7 +21,7 @@ BGM(X, R, K = 2, tolerance = 0.001, nmax = 100)
 the first K principa components, i.e. \eqn{F_t^{(n)}}.
 }
 \description{
-\code{X} may include some information corralted with \code{R}. The function
+\eqn{X} may include some information corralted with \eqn{R}. The function
 extract factors from \code{X} which is not corralated with \code{R} by iteration
 based on Boivin et al. (2009).
 }

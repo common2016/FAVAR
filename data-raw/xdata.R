@@ -1,7 +1,7 @@
 ## code to prepare `xdata` dataset goes here
 rm(list = ls())
 library(pacman)
-p_load(matlab,R.matlab,tidyverse,MyFun,bvartools)
+p_load(matlab,R.matlab,tidyverse,MyFun,bvartools,foreach)
 
 devtools::load_all()
 
@@ -19,12 +19,11 @@ regdata <- cbind(X,Y) %>% as.data.frame()
 colnames(regdata) <- namesXY
 regdata$slowcode <- c(slowcode,rep(NA,75))
 
-
 fit <- FAVAR(Y, X, slowcode,fctmethod = 'BBE',varprior = 'mn',
-             nrep = 500, nburn = 100, K = 2, plag = 2, nhor = 20)
+             nrep = 30000, nburn = 5000, K = 2, plag = 2, nhor = 20,ncores = 6)
 
 fit <- FAVAR(matrix(Y[,ncol(Y)],ncol = 1), X, slowcode,fctmethod = 'BBE',varprior = 'none',
-             nrep = 5000, nburn = 1000, K = 3, plag = 7, nhor = 48, delta = 0.091)
+             nrep = 5000, nburn = 1000, K = 3, plag = 7, nhor = 48, delta = 0.091,ncores = 6)
 
 summary.favar(fit,xvar = c(3,5))
 

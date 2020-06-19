@@ -84,7 +84,7 @@ FAVAR <- function(Y, X, fctmethod = 'BBE', slowcode,standerze = TRUE,
   imp <- NULL
   if (!is.null(nhor)){
     # Chol dev
-    shock_init <- diag(c(zeros(1,p-1), 1/delta)) # in terms of standard deviation, identification is recursive
+    shock_init <- diag(c(matlab::zeros(1,p-1), 1/delta)) # in terms of standard deviation, identification is recursive
     # initialize
     cl <- parallel::makeCluster(ncores)
     doParallel::registerDoParallel(cl)

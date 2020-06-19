@@ -6,6 +6,11 @@
 \usage{
 irfFAVAR(fit, nvar = 116)
 }
+\arguments{
+\item{fit}{FAVAR object.}
+
+\item{nvar}{whose impulse response is computed? It's coloumn index in X.}
+}
 \value{
 a object from \code{ggplot2::ggplot}.
 }

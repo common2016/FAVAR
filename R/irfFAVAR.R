@@ -1,7 +1,7 @@
 #' Impulse Response Function for FAVAR
 #'
-#' @param fit
-#' @param nvar
+#' @param fit FAVAR object.
+#' @param nvar whose impulse response is computed? It's coloumn index in X.
 #' @return a object from \code{ggplot2::ggplot}.
 #' @export
 irfFAVAR <- function(fit, nvar = 116){

@@ -7,9 +7,9 @@
 FAVAR(
   Y,
   X,
+  fctmethod = "BBE",
   slowcode,
   standerze = TRUE,
-  fctmethod = "BBE",
   varprior = "none",
   nrep = 15000,
   nburn = 5000,
@@ -25,12 +25,12 @@ FAVAR(
 
 \item{X}{a matrix. A large data set. see details.}
 
+\item{fctmethod}{\code{'BBE'} or \code{'BGM'}. \code{'BBE'}(default) means the fators extracted method by Bernanke et al. (2005),
+and \code{'BGM'} means the fators extracted method by Boivin et al. (2009).}
+
 \item{slowcode}{a logical vector}
 
 \item{standerze}{logical value, wheather standarze X and Y}
-
-\item{fctmethod}{\code{'BBE'} or \code{'BGM'}. \code{'BBE'}(default) means the fators extracted method by Bernanke et al. (2005),
-and \code{'BGM'} means the fators extracted method by Boivin et al. (2009).}
 
 \item{K}{number of factors.}
 

@@ -47,9 +47,10 @@ and \code{'BGM'} means the fators extracted method by Boivin et al. (2009).}
 Estimate a FAVAR model by Bernanke et al. (2005).
 }
 \references{
-\link{1} Bernanke, B.S., J. Boivin and P. Eliasz, Measuring the Eeefects of Monetary Policy:
+\enumerate{
+\item Bernanke, B.S., J. Boivin and P. Eliasz, Measuring the Eeefects of Monetary Policy:
 A Factor-Augmented Vector Autoregressive (FAVAR) Approach. Quarterly Journal of Economics, 2005. 120(1): p. 387-422.
-
-\link{2} Boivin, J., M.P. Giannoni and I. Mihov, Sticky Prices and Monetary Policy: Evidence
+\item Boivin, J., M.P. Giannoni and I. Mihov, Sticky Prices and Monetary Policy: Evidence
 from Disaggregated US Data. American Economic Review, 2009. 99(1): p. 350-384.
+}
 }

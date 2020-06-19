@@ -16,10 +16,10 @@
 #' @param ncores the number of CPU cores in parallel computations.
 #'
 #' @references
-#' [1] Bernanke, B.S., J. Boivin and P. Eliasz, Measuring the Eeefects of Monetary Policy:
+#' 1. Bernanke, B.S., J. Boivin and P. Eliasz, Measuring the Eeefects of Monetary Policy:
 #' A Factor-Augmented Vector Autoregressive (FAVAR) Approach. Quarterly Journal of Economics, 2005. 120(1): p. 387-422.
 #'
-#' [2] Boivin, J., M.P. Giannoni and I. Mihov, Sticky Prices and Monetary Policy: Evidence
+#' 2. Boivin, J., M.P. Giannoni and I. Mihov, Sticky Prices and Monetary Policy: Evidence
 #'  from Disaggregated US Data. American Economic Review, 2009. 99(1): p. 350-384.
 #'
 #' @import foreach
@@ -72,7 +72,7 @@ FAVAR <- function(Y, X, fctmethod = 'BBE', slowcode,standerze = TRUE,
   }
 
   # VAR: sampling
-  z <- ts(FY,1,nrow(FY))
+  z <- stats::ts(FY,1,nrow(FY))
   ifelse (is.null(colnames(Y)),
           colnames(z) <- c(paste('factor',as.character(1:K),sep = ''),paste('Y',as.character(1:ncol(Y)),sep = '')),
           colnames(z) <- c(paste('factor',as.character(1:K),sep = ''),colnames(Y)))
@@ -88,7 +88,7 @@ FAVAR <- function(Y, X, fctmethod = 'BBE', slowcode,standerze = TRUE,
     # initialize
     cl <- parallel::makeCluster(ncores)
     doParallel::registerDoParallel(cl)
-    ans <- zeros(ncol(Y) + ncol(X),nhor)
+    ans <- matlab::zeros(ncol(Y) + ncol(X),nhor)
     imp <- foreach::foreach (i = 1:ncol(varrlt$A), .packages = c('matlab','FAVAR','tidyverse')) %dopar% {
       PHI_mat <- matrix(varrlt$A[,i],nrow = p, byrow = FALSE)
       macoef <- FAVAR::ar2ma(PHI_mat, p = plag, n = nhor, CharValue = FALSE)
@@ -97,7 +97,7 @@ FAVAR <- function(Y, X, fctmethod = 'BBE', slowcode,standerze = TRUE,
       d <- diag(diag(shock))
       shock <- solve(d) %*% shock
 
-      impresp <- zeros(p,p*nhor)
+      impresp <- matlab::zeros(p,p*nhor)
       impresp[1:p,1:p] <- shock
       # bigai <- biga
       for (j in 1:(nhor-1)){
@@ -105,7 +105,7 @@ FAVAR <- function(Y, X, fctmethod = 'BBE', slowcode,standerze = TRUE,
       }
 
       # select the last coloumn in every period
-      imp_m <- zeros(p,nhor)
+      imp_m <- matlab::zeros(p,nhor)
       jj <- 0
       for (ij in 1:nhor){
         jj <- jj + p

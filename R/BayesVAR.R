@@ -52,7 +52,7 @@ BayesVAR <- function(data, plag =2, iter = 10000, burnin = 5000, prior = 'none',
     # Draw variance-covariance matrix
     u <- y - matrix(a, k) %*% x # Obtain residuals
     u_sigma_scale_post <- solve(u_sigma_scale_prior + tcrossprod(u))
-    u_sigma_i <- matrix(rWishart(1, u_sigma_df_post, u_sigma_scale_post)[,, 1], k)
+    u_sigma_i <- matrix(stats::rWishart(1, u_sigma_df_post, u_sigma_scale_post)[,, 1], k)
     u_sigma <- solve(u_sigma_i) # Invert Sigma_i to obtain Sigma
 
     # Store draws

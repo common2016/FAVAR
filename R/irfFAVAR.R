@@ -14,13 +14,13 @@ irfFAVAR <- function(fit, nvar = 116){
   ans <- ans[,,-1]
 
   irf <- ans[,nvar,]
-  picdata <- data.frame(irf = apply(irf, 2, median),
-                        up = apply(irf, 2, quantile, probs = 0.9),
-                        dw = apply(irf, 2, quantile, probs = 0.1))
-  picdata$nhor <- 1:nrow(picdata)
-  p <- ggplot2::ggplot(picdata, aes(x = nhor, y = irf)) + ggplot2::geom_line() +
-    ggplot2::geom_line(aes(y = up), linetype = 2) + ggplot2::geom_hline(yintercept = 0) +
-    ggplot2::geom_line(aes(y = dw), linetype = 2) + ggplot2::labs(x = '', y= '') +
+  picdata <- data.frame(irf = apply(irf, 2, stats::median),
+                        up = apply(irf, 2, stats::quantile, probs = 0.9),
+                        dw = apply(irf, 2, stats::quantile, probs = 0.1))
+  picdata[,'nhor'] <- 1:nrow(picdata)
+  p <- ggplot2::ggplot(picdata, ggplot2::aes(x = nhor, y = irf)) + ggplot2::geom_line() +
+    ggplot2::geom_line(ggplot2::aes(y = up), linetype = 2) + ggplot2::geom_hline(yintercept = 0) +
+    ggplot2::geom_line(ggplot2::aes(y = dw), linetype = 2) + ggplot2::labs(x = '', y= '') +
     ggplot2::theme_bw()
   return(p)
 }

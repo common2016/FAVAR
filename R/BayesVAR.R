@@ -6,17 +6,20 @@
 #' @param plag a lag order in VAR
 #' @param iter iterations of the MCMC
 #' @param burnin
-#' @param prior prior setting for VAR
+#' @param prior \code{'none'} or \code{'mn'}. The \code{'none'} means no information
+#' prior, and the \code{mn} means Minnesota prior.
 #' @param type \code{'none','drift'} or \code{'trend'}
 #' @import bvartools
 #' @export
 BayesVAR <- function(data, plag =2, iter = 10000, burnin = 5000, prior = 'none', type = 'none',
                      ncores = 1){
   data <- gen_var(data, p = plag, deterministic = type)
-  y <- data$Y
-  x <- data$Z
+  y <- t(data$data$Y) # transpose is for post_normal
+  x <- t(data$data$Z)
+
   # OLS
-  A_freq <- tcrossprod(y, x) %*% solve(tcrossprod(x)) # A estimation
+  A_freq <- tcrossprod(y, x) %*% solve(tcrossprod(x))
+  # A_freq <- solve(crossprod(x)) %*% crossprod(x,y) # A estimation
   u_freq <- y - A_freq %*% x  # # sigma
   u_sigma_freq <- tcrossprod(u_freq) / (ncol(y) - nrow(x))
   store <- iter - burnin
@@ -41,6 +44,8 @@ BayesVAR <- function(data, plag =2, iter = 10000, burnin = 5000, prior = 'none',
   # Initial values
   u_sigma_i <- diag(.00001, k)
   u_sigma <- solve(u_sigma_i)
+
+  # browser()
 
   # Start Gibbs sampler
   cl <- parallel::makeCluster(ncores)

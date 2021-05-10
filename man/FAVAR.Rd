@@ -28,7 +28,8 @@ FAVAR(
 \item{fctmethod}{\code{'BBE'} or \code{'BGM'}. \code{'BBE'}(default) means the fators extracted method by Bernanke et al. (2005),
 and \code{'BGM'} means the fators extracted method by Boivin et al. (2009).}
 
-\item{slowcode}{a logical vector}
+\item{slowcode}{a logical vector that Identifies which columns of X are slow
+moving. Only when \code{fctmethod} is set as \code{'BBE'}, \code{slowcode} is valid.}
 
 \item{standerze}{logical value, wheather standarze X and Y}
 

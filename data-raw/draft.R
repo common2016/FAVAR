@@ -20,11 +20,11 @@ colnames(regdata) <- namesXY
 regdata$slowcode <- c(slowcode,rep(NA,75))
 
 fit <- FAVAR(Y, X, slowcode = NULL,fctmethod = 'BGM',varprior = 'mn',
-             nrep = 15000, nburn = 5000, K = 3, plag = 7, nhor = 20,ncores = 6)
+             nrep = 15000, nburn = 5000, K = 2, plag = 2, nhor = 22,ncores = 10)
 
-fit <- FAVAR(matrix(Y[,ncol(Y)],ncol = 1), X, slowcode,fctmethod = 'BBE',varprior = 'none',
-             nrep = 5000, nburn = 1000, K = 3, plag = 7, nhor = 48, delta = 0.091,ncores = 6)
+fit <- FAVAR(Y, X, slowcode,fctmethod = 'BBE',varprior = 'none',
+             nrep = 5000, nburn = 1000, K = 2, plag = 2, nhor = 22, delta = 0.091,ncores = 6)
 
 summary.favar(fit,xvar = c(3,5))
-irfFAVAR(fit,116)
+irfFAVAR(fit,117)
 # usethis::use_data(regdata, overwrite = TRUE)

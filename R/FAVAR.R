@@ -4,7 +4,8 @@
 #'
 #' @param Y a matrix. If only one coloumn, don't set as a vector.
 #' @param X a matrix. A large data set. see details.
-#' @param slowcode a logical vector
+#' @param slowcode a logical vector that Identifies which columns of X are slow
+#' moving. Only when \code{fctmethod} is set as \code{'BBE'}, \code{slowcode} is valid.
 #' @param standerze logical value, wheather standarze X and Y
 #' @param fctmethod \code{'BBE'} or \code{'BGM'}. \code{'BBE'}(default) means the fators extracted method by Bernanke et al. (2005),
 #' and \code{'BGM'} means the fators extracted method by Boivin et al. (2009).
@@ -24,7 +25,7 @@
 #'
 #' @import foreach
 #' @export
-FAVAR <- function(Y, X, fctmethod = 'BBE', slowcode,standerze = TRUE,
+FAVAR <- function(Y, X, fctmethod = 'BBE', slowcode, standerze = TRUE,
                   varprior = 'none',nrep = 15000, nburn = 5000, K = 2, plag = 2, nhor = NULL, delta = 2.73,
                   ncores = 1){
 
@@ -71,6 +72,7 @@ FAVAR <- function(Y, X, fctmethod = 'BBE', slowcode,standerze = TRUE,
     Lamb[,,i] <- ans
   }
 
+  # browser()
   # VAR: sampling
   z <- stats::ts(FY,1,nrow(FY))
   ifelse (is.null(colnames(Y)),
@@ -89,9 +91,10 @@ FAVAR <- function(Y, X, fctmethod = 'BBE', slowcode,standerze = TRUE,
     cl <- parallel::makeCluster(ncores)
     doParallel::registerDoParallel(cl)
     ans <- matlab::zeros(ncol(Y) + ncol(X),nhor)
-    imp <- foreach::foreach (i = 1:ncol(varrlt$A), .packages = c('matlab','FAVAR','tidyverse')) %dopar% {
+    imp <- foreach::foreach (i = 1:ncol(varrlt$A), .packages = c('matlab','tidyverse'),
+                             .export = c('ar2ma')) %dopar% {
       PHI_mat <- matrix(varrlt$A[,i],nrow = p, byrow = FALSE)
-      macoef <- FAVAR::ar2ma(PHI_mat, p = plag, n = nhor, CharValue = FALSE)
+      macoef <- ar2ma(PHI_mat, p = plag, n = nhor, CharValue = FALSE)
 
       shock <- matrix(varrlt$sigma[,i],nrow = p, byrow = FALSE) %>% chol() %>% t()
       d <- diag(diag(shock))

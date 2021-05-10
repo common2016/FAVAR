@@ -36,5 +36,6 @@ summary.favar <- function(favar, xvar = NULL){
      cat('-------------\n')
     }
   }
+  NextMethod('summary')
 }
 

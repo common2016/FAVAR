@@ -1,7 +1,7 @@
 #'
 #'
 
-
+# OLS
 olssvd <- function(F0,ly){
   ans <- svd(ly)
   d <- 1/ans$d

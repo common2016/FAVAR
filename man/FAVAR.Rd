@@ -9,21 +9,21 @@ FAVAR(
   X,
   fctmethod = "BBE",
   slowcode,
-  standerze = TRUE,
-  varprior = "none",
-  nrep = 15000,
-  nburn = 5000,
   K = 2,
   plag = 2,
-  nhor = NULL,
-  delta = 2.73,
+  factorprior = list(b0 = 0, B0 = NULL, c0 = 0.01, d0 = 0.01),
+  varprior = list(b0 = 0, vb0 = 0, nu = 0, s = 0, mn = list(kappa0 = NULL, kappa1 =
+    NULL)),
+  nburn = 5000,
+  nrep = 15000,
+  standardize = TRUE,
   ncores = 1
 )
 }
 \arguments{
-\item{Y}{a matrix. If only one coloumn, don't set as a vector.}
+\item{Y}{a matrix. Observable economic variables assumed to drive the dynamics of the economy.}
 
-\item{X}{a matrix. A large data set. see details.}
+\item{X}{a matrix. A large macro data set. The meanings of \code{X} and \code{Y} is same as ones of Bernanke et al. (2005).}
 
 \item{fctmethod}{\code{'BBE'} or \code{'BGM'}. \code{'BBE'}(default) means the fators extracted method by Bernanke et al. (2005),
 and \code{'BGM'} means the fators extracted method by Boivin et al. (2009).}
@@ -31,21 +31,57 @@ and \code{'BGM'} means the fators extracted method by Boivin et al. (2009).}
 \item{slowcode}{a logical vector that Identifies which columns of X are slow
 moving. Only when \code{fctmethod} is set as \code{'BBE'}, \code{slowcode} is valid.}
 
-\item{standerze}{logical value, wheather standarze X and Y}
+\item{K}{the number of factors extraced from \code{X}.}
 
-\item{K}{number of factors.}
+\item{plag}{the lag order in the VAR equation.}
 
-\item{plag}{lag order in the VAR equation}
+\item{factorprior}{A list whose elements is named sets the prior for the factor equation.
+\code{b0} is the prior of mean of \eqn{\beta},and \code{vb0} is the prior of the variance
+of \eqn{\beta}, and \code{c0/2} and \code{d0/2} are the shape and scale parameters of Gamma distribution, respectively.}
 
-\item{nhor}{IRF horizon, default is \code{NULL}}
+\item{varprior}{A list whose elements is named sets the prior of VAR equations.
+\code{b0} is the prior of mean of \eqn{\beta}, and \code{vb0} is the prior
+of the variance of \eqn{\beta}. \code{nu0} is the degree of freedom
+of Wishart distribution for \eqn{\Sigma^{-1}}, i.e., a shape parameter, and \code{s0^{-1}} is
+scale parameters for the Wishart distribution. \code{mn} sets the Minesota prior. If
+\code{prior$mn$kappa0} is not \code{NULL}, \code{b0,vb0} is neglected.
+\code{'mn'} means Minnesota prior.}
+
+\item{nburn}{the amount of the first random draws discarded in MCMC}
+
+\item{nrep}{the amount of the saved draws in MCMC}
+
+\item{standardize}{Wheather standardize? We suggest it does, because in the function
+VAR equation and factor equaion both don't include intercept.}
 
 \item{ncores}{the number of CPU cores in parallel computations.}
-
-\item{\code{'none'}}{or \code{'mn'}, varprior prior setting for VAR. \code{'none'} means noninformative prior, and
-\code{'mn'} means Minnesota prior.}
+}
+\value{
+\describe{
+\item{varrlt}{A list. The estimation results of VAR including estimated coefficients
+\code{A}, their variance-covariance matrix \code{sigma}, and other statistical summary for \code{A}.}
+\item{Lamb}{A array with 3 dimension. and \code{Lamb[i,,]} is factor loading matrix
+for factor equations in the ith sample of MCMC.}
+\item{factorx}{Extracted factors from \code{X}}
+\item{model_info}{Model information containing \code{nburn,nrep,X,Y} and \code{p}, the number of endogenous variables
+in the VAR.}
+}
 }
 \description{
 Estimate a FAVAR model by Bernanke et al. (2005).
+}
+\examples{
+data('regdata')
+fit <- FAVAR(Y = regdata[,c("Inflation","Unemployment","Fed_funds")],
+             X = regdata[,1:115], slowcode = slowcode,fctmethod = 'BBE',
+             varprior = list(b0 = 0,vb0 = 10, nu0 = 0, s0 = 0),
+             factorprior = list(b0 = 0, B0 = NULL, c0 = 0.01, d0 = 0.01),
+             nrep = 500, nburn = 100, K = 2, plag = 2)
+ # print FAVAR estimation results
+summary(fit,xvar = c(3,5))
+# plot impulse response figure
+library(patchwork)
+irf(fit,resvar = c(2,9,10))
 }
 \references{
 \enumerate{

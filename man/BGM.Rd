@@ -18,7 +18,7 @@ BGM(X, R, K = 2, tolerance = 0.001, nmax = 100)
 \item{nmax}{the max iterations, see details.}
 }
 \value{
-the first K principa components, i.e. \eqn{F_t^{(n)}}.
+the first K principa components, i.e. \eqn{F_t^{(n)}}, not containing the information \code{R}.
 }
 \description{
 \eqn{X} may include some information corralted with \eqn{R}. The function
@@ -36,4 +36,12 @@ coefficients \eqn{\beta_R^{(0)}} of \eqn{R_t}.
 \code{X_t^{(0)}}.
 \item repeat step 2 - step 4 until precision you want.
 }
+}
+\examples{
+data('regdata')
+BGM(X = regdata[,1:115],R = regdata[,ncol(regdata)], K = 2)
+}
+\references{
+Boivin, J., M.P. Giannoni and I. Mihov, Sticky Prices and Monetary Policy: Evidence
+from Disaggregated US Data. American Economic Review, 2009. 99(1): p. 350-384.
 }

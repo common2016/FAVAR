@@ -1,12 +1,18 @@
 Package: FAVAR
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
-Authors@R: 
-    person(given = "First",
-           family = "Last",
-           role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
+Title: Bayesian Analysis of a FAVAR model
+Version: 0.1.0
+Authors@R: c(
+    person(given = "Pu",
+           family = "Chen",
+           role = c("aut","cre"),
+           email = "shengnehs@qq.com",
+           comment = c(ORCID = "0000-0001-7594-6827")),
+    person(given = "Chen",
+           family = "Chen",
+           role = c("aut"),
+           email = "haoxi0906@163.com",
+           comment = c(ORCID = "YOUR-ORCID-ID"))       
+           )
 Description: What the package does (one paragraph).
 License: GPL-3
 Encoding: UTF-8
@@ -18,6 +24,16 @@ Imports:
     ggplot2,
     bvartools,
     foreach,
-    magrittr
+    magrittr,
+    SimDesign,
+    MCMCpack,
+    coda,
+    dplyr,
+    doParallel,
+    vars,
+    Matrix,
+    patchwork
 Depends: 
     R (>= 2.10)
+Suggests: 
+    testthat

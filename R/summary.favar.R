@@ -1,0 +1,44 @@
+#' Print Results of FAVAR
+#'
+#' @param object a object from function \code{FAVAR}.
+#' @param xvar a numeric vector, which variables in \code{X} was printed. It's a index.
+#' If it's \code{NULL}, estimation results for X = F + Y is not printed.
+#' @param ... additional arguments affecting the summary produced.
+#'
+#' @examples
+#' # see FAVAR function
+#' @export
+summary.favar <- function(object, xvar = NULL,...){
+  if (!inherits(object, 'favar')) stop('object must be of class "favar"')
+
+  # print VAR for FY
+  for (i in 1:nrow(object$varrlt$sumrlt$varcoef)) {
+    paste('Estimation VAR results for equation',rownames(object$varrlt$sumrlt$varcoef)[i]) %>%
+      cat('\n')
+    cat('-------------\n')
+    data.frame(Estimate = object$varrlt$sumrlt$varcoef[i,],
+               se = object$varrlt$sumrlt$varse[i,],
+               q025 = object$varrlt$sumrlt$q25[i,],
+               q975 = object$varrlt$sumrlt$q975[i,]) %>% round(4) %>% print()
+    cat('--------------\n')  }
+
+  # print X = FY
+  if (!is.null(xvar)){
+      cat('\n=================================================================================\n')
+    for (i in xvar) {
+      sprintf('Estimation results for the %dth equation in X = FY',i) %>%
+        cat('\n------------\n')
+     ans <- coda::mcmc(object$Lamb[,,i]) %>% summary()
+     ans <- data.frame(loading = ans$statistics[,'Mean'],
+               loading_se = ans$statistics[,'Naive SE'],
+               q025 = ans$quantiles[,'2.5%'],
+               q975 = ans$quantiles[,'97.5%'])
+     # ans <- ans[-1,]
+     rownames(ans) <- rownames(object$varrlt$sumrlt$varcoef)
+     print(ans)
+     cat('-------------\n')
+    }
+  }
+  # NextMethod('summary')
+}
+

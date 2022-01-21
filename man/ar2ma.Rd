@@ -4,7 +4,7 @@
 \alias{ar2ma}
 \title{ar2ma}
 \usage{
-ar2ma(ar, p = 2, n = 11, CharValue = T)
+ar2ma(ar, p, n = 11, CharValue = T)
 }
 \arguments{
 \item{ar}{AR coefficients matrix which is k x kp dimenstion, k is numbers of variables,
@@ -28,8 +28,9 @@ the formula is,
 where A is MA coeffiencts, F is AR coeffiencts.
 }
 \examples{
-data(Canada, package = 'vars')
-ar <- vars::Bcoef(vars::VAR(Canada, p = 2, type = "none"))
+require(vars)
+data(Canada)
+ar <- Bcoef(VAR(Canada, p = 2, type = "none"))
 ar
-ar2ma(ar)
+ar2ma(ar, p = 2)
 }

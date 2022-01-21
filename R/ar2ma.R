@@ -12,12 +12,13 @@
 #' @importFrom magrittr `%>%`
 #' @export
 #' @examples
-#' data(Canada, package = 'vars')
-#' ar <- vars::Bcoef(vars::VAR(Canada, p = 2, type = "none"))
+#' require(vars)
+#' data(Canada)
+#' ar <- Bcoef(VAR(Canada, p = 2, type = "none"))
 #' ar
-#' ar2ma(ar)
+#' ar2ma(ar, p = 2)
 
-ar2ma <- function(ar,p = 2,n = 11, CharValue = T){
+ar2ma <- function(ar,p,n = 11, CharValue = T){
   # get ar coefficiets
   Fmr <- list()
   In <- list() # eye matrix

@@ -5,7 +5,7 @@ mlag2 <- function(FY, plag = 2){
     if (i == 1){
       ans <- apply(FY, 2, dplyr::lag, n = i)
     }else {
-      ans <- apply(FY, 2, dplyr::lag, n = i) %>% cbind(ans,.)
+      ans <- cbind(ans, apply(FY, 2, dplyr::lag, n = i))
     }
   }
   return(ans)

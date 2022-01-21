@@ -2,19 +2,42 @@
 #'
 #' Estimate a FAVAR model by Bernanke et al. (2005).
 #'
-#' @param Y a matrix. If only one coloumn, don't set as a vector.
-#' @param X a matrix. A large data set. see details.
-#' @param slowcode a logical vector that Identifies which columns of X are slow
-#' moving. Only when \code{fctmethod} is set as \code{'BBE'}, \code{slowcode} is valid.
-#' @param standerze logical value, wheather standarze X and Y
+#' @param Y a matrix. Observable economic variables assumed to drive the dynamics of the economy.
+#' @param X a matrix. A large macro data set. The meanings of \code{X} and \code{Y} is same as ones of Bernanke et al. (2005).
 #' @param fctmethod \code{'BBE'} or \code{'BGM'}. \code{'BBE'}(default) means the fators extracted method by Bernanke et al. (2005),
 #' and \code{'BGM'} means the fators extracted method by Boivin et al. (2009).
-#' @param \code{'none'} or \code{'mn'}, varprior prior setting for VAR. \code{'none'} means noninformative prior, and
+#' @param slowcode a logical vector that Identifies which columns of X are slow
+#' moving. Only when \code{fctmethod} is set as \code{'BBE'}, \code{slowcode} is valid.
+#' @param K the number of factors extraced from \code{X}.
+#' @param plag the lag order in the VAR equation.
+#' @param factorprior A list whose elements is named sets the prior for the factor equation.
+#'  \code{b0} is the prior of mean of \eqn{\beta},and \code{vb0} is the prior of the variance
+#'  of \eqn{\beta}, and \code{c0/2} and \code{d0/2} are the shape and scale parameters of Gamma distribution, respectively.
+#' @param varprior A list whose elements is named sets the prior of VAR equations.
+#'  \code{b0} is the prior of mean of \eqn{\beta}, and \code{vb0} is the prior
+#'  of the variance of \eqn{\beta}. \code{nu0} is the degree of freedom
+#' of Wishart distribution for \eqn{\Sigma^{-1}}, i.e., a shape parameter, and \code{s0^{-1}} is
+#' scale parameters for the Wishart distribution. \code{mn} sets the Minesota prior. If
+#' \code{prior$mn$kappa0} is not \code{NULL}, \code{b0,vb0} is neglected.
 #' \code{'mn'} means Minnesota prior.
-#' @param K number of factors.
-#' @param plag lag order in the VAR equation
-#' @param nhor IRF horizon, default is \code{NULL}
+#' @param nburn the amount of the first random draws discarded in MCMC
+#' @param nrep the amount of the saved draws in MCMC
+#' @param standardize Wheather standardize? We suggest it does, because in the function
+#' VAR equation and factor equaion both don't include intercept.
 #' @param ncores the number of CPU cores in parallel computations.
+#'
+#'
+#'
+#' @return \describe{
+#' \item{varrlt}{A list. The estimation results of VAR including estimated coefficients
+#'  \code{A}, their variance-covariance matrix \code{sigma}, and other statistical summary for \code{A}.}
+#' \item{Lamb}{A array with 3 dimension. and \code{Lamb[i,,]} is factor loading matrix
+#' for factor equations in the ith sample of MCMC.}
+#' \item{factorx}{Extracted factors from \code{X}}
+#' \item{model_info}{Model information containing \code{nburn,nrep,X,Y} and \code{p}, the number of endogenous variables
+#' in the VAR.}
+#' }
+#'
 #'
 #' @references
 #' 1. Bernanke, B.S., J. Boivin and P. Eliasz, Measuring the Eeefects of Monetary Policy:
@@ -23,21 +46,34 @@
 #' 2. Boivin, J., M.P. Giannoni and I. Mihov, Sticky Prices and Monetary Policy: Evidence
 #'  from Disaggregated US Data. American Economic Review, 2009. 99(1): p. 350-384.
 #'
-#' @import foreach
 #' @export
-FAVAR <- function(Y, X, fctmethod = 'BBE', slowcode, standerze = TRUE,
-                  varprior = 'none',nrep = 15000, nburn = 5000, K = 2, plag = 2, nhor = NULL, delta = 2.73,
-                  ncores = 1){
-
-  p <- K + ncol(Y)
-  # standardize X
-  if (standerze){
+#' @examples
+#' data('regdata')
+#' fit <- FAVAR(Y = regdata[,c("Inflation","Unemployment","Fed_funds")],
+#'              X = regdata[,1:115], slowcode = slowcode,fctmethod = 'BBE',
+#'              varprior = list(b0 = 0,vb0 = 10, nu0 = 0, s0 = 0),
+#'              factorprior = list(b0 = 0, B0 = NULL, c0 = 0.01, d0 = 0.01),
+#'              nrep = 500, nburn = 100, K = 2, plag = 2)
+#'  # print FAVAR estimation results
+#' summary(fit,xvar = c(3,5))
+#' # plot impulse response figure
+#' library(patchwork)
+#' irf(fit,resvar = c(2,9,10))
+FAVAR <- function(Y, X, fctmethod = 'BBE', slowcode,K = 2, plag = 2,
+                  factorprior = list(b0 = 0, B0 = NULL, c0 = 0.01, d0 = 0.01),
+                  varprior = list(b0 = 0,vb0 = 0, nu = 0, s = 0,
+                                  mn = list(kappa0 = NULL, kappa1 = NULL)),
+                  nburn = 5000, nrep = 15000,
+                  standardize = TRUE, ncores = 1){
+  # standardize
+  if (standardize){
     X <- scale(X)
     Y <- scale(Y)
   }
+  p <- K + ncol(Y)
 
+  # extract PC
   F0 <- ExtrPC(X,K)$F0
-  # Lf <- ExtrPC(X_st,K)$Lf
 
   # extract factors
   if (fctmethod %in% 'BBE'){
@@ -48,80 +84,48 @@ FAVAR <- function(Y, X, fctmethod = 'BBE', slowcode, standerze = TRUE,
     Fr0 <- BGM(X, Y[,ncol(Y)], K = K)
   }
 
-  Y = scale(Y,center = FALSE)
-
   # For 2 equations
   XY <-  cbind(X,Y)
   FY <- cbind(Fr0, Y)
-
   L <- t(olssvd(XY, FY))
-  SIGMA <- (t(XY - FY %*% t(L)) %*% (XY - FY %*% t(L)))/nrow(Y)
-  SIGMA <- diag(diag(SIGMA))
 
+  # estimate factor equations
+  # prior on Li ~ N(o,I)
+  ifelse (is.null(factorprior$B0),
+          Li_prvar <- 4 * matlab::eye(p),
+          Li_prvar <- factorprior$B0)
 
-  Li_prvar <- 4 * matlab::eye(p) # prior on Li ~ N(o,I)
-  a <- b <- 0.01 # prior on SIGMA ~ iG(a,b)
-
-  # X = F + Y: sampling
-  Lamb <- array(0,dim = c(nrep,p+1,ncol(X)))
-  for (i in 1:ncol(X)) {
-    meddata <- data.frame(dep = X[,i]) %>% cbind(as.data.frame(FY))
-    ans <- MCMCpack::MCMCregress(dep ~ .-1, data = meddata, burnin = nburn, mcmc = nrep,
-                                 B0 = Li_prvar, sigma.mu = SIGMA[i,i], c0 = a, d0 = b,
-                                 b0 = 0)
-    Lamb[,,i] <- ans
+  # regress per coloum of X on FY
+  factor_reg <- function(n, Xmatrix, FY, K, nburn, nrep, b0, B0, c0, d0){
+    meddata <- cbind(data.frame(dep = Xmatrix[,n]), as.data.frame(FY))
+    if (n > K){
+      ans <- MCMCpack::MCMCregress(dep ~ .-1, data = meddata, burnin = nburn, mcmc = nrep,
+                                   B0 = B0, c0 = c0, d0 = d0, b0 = b0)
+      Lamb <- ans[,1:(K + ncol(Y))]
+    } else Lamb <- matlab::repmat(L[n,],c(nrep,1))
+    return(Lamb)
   }
+  # parallel
+  cl <- parallel::makeCluster(ncores)
+  parallel::clusterEvalQ(cl,{
+    library(MCMCpack)
+    library(matlab)
+  }) %>% invisible()
+  ans <- parallel::parLapply(cl, 1:ncol(X), factor_reg, Xmatrix = X, FY = FY, K = K, nburn = nburn,
+                      nrep = nrep, b0 = factorprior$b0, B0 = Li_prvar,
+                      c0 = factorprior$c0, d0 = factorprior$d0)
+  parallel::stopCluster(cl)
+  Lamb <- vapply(1:length(ans), function(i,x) x[[i]], FUN.VALUE = matrix(0,nrep,p), x = ans)
 
-  # browser()
-  # VAR: sampling
+  # estimate VAR equations
   z <- stats::ts(FY,1,nrow(FY))
   ifelse (is.null(colnames(Y)),
           colnames(z) <- c(paste('factor',as.character(1:K),sep = ''),paste('Y',as.character(1:ncol(Y)),sep = '')),
           colnames(z) <- c(paste('factor',as.character(1:K),sep = ''),colnames(Y)))
+  varrlt <- BVAR(z, plag, iter = nrep+nburn, burnin = nburn, prior = varprior, ncores = ncores)
 
-
-  varrlt <- BayesVAR(z, plag, iter = nrep+nburn, burnin = nburn, prior = varprior, type = 'none',ncores = ncores)
-
-  # compute IRF?
-  imp <- NULL
-  if (!is.null(nhor)){
-    # Chol dev
-    shock_init <- diag(c(matlab::zeros(1,p-1), 1/delta)) # in terms of standard deviation, identification is recursive
-    # initialize
-    cl <- parallel::makeCluster(ncores)
-    doParallel::registerDoParallel(cl)
-    ans <- matlab::zeros(ncol(Y) + ncol(X),nhor)
-    imp <- foreach::foreach (i = 1:ncol(varrlt$A), .packages = c('matlab','tidyverse'),
-                             .export = c('ar2ma')) %dopar% {
-      PHI_mat <- matrix(varrlt$A[,i],nrow = p, byrow = FALSE)
-      macoef <- ar2ma(PHI_mat, p = plag, n = nhor, CharValue = FALSE)
-
-      shock <- matrix(varrlt$sigma[,i],nrow = p, byrow = FALSE) %>% chol() %>% t()
-      d <- diag(diag(shock))
-      shock <- solve(d) %*% shock
-
-      impresp <- matlab::zeros(p,p*nhor)
-      impresp[1:p,1:p] <- shock
-      # bigai <- biga
-      for (j in 1:(nhor-1)){
-        impresp[,(j*p+1):((j+1)*p)] <- macoef[[j]]  %*% shock
-      }
-
-      # select the last coloumn in every period
-      imp_m <- matlab::zeros(p,nhor)
-      jj <- 0
-      for (ij in 1:nhor){
-        jj <- jj + p
-        imp_m[,ij] <- impresp[,jj]
-      }
-
-      ans[1:ncol(X),] <- t(Lamb[i,1:p,]) %*% imp_m
-      ans[(nrow(ans)-ncol(Y)+1):nrow(ans),] <- imp_m[(nrow(imp_m)-ncol(Y)+1):nrow(imp_m),]
-      ans
-    }
-    parallel::stopCluster(cl)
-  }
-  rlt <- list(Lamb = Lamb, varrlt = varrlt, imp = imp)
+  rlt <- list(varrlt = varrlt, Lamb = Lamb, factorx = Fr0,
+              model_info = list(nburn = nburn, nrep = nrep, X = X, Y = Y, p = p))
   class(rlt) <- 'favar'
   return(rlt)
 }

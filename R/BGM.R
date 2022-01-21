@@ -21,7 +21,13 @@
 #'  \item repeat step 2 - step 4 until precision you want.
 #' }
 #'
-#' @return the first K principa components, i.e. \eqn{F_t^{(n)}}.
+#' @references
+#' Boivin, J., M.P. Giannoni and I. Mihov, Sticky Prices and Monetary Policy: Evidence
+#'  from Disaggregated US Data. American Economic Review, 2009. 99(1): p. 350-384.
+#' @return the first K principa components, i.e. \eqn{F_t^{(n)}}, not containing the information \code{R}.
+#' @examples
+#' data('regdata')
+#' BGM(X = regdata[,1:115],R = regdata[,ncol(regdata)], K = 2)
 #' @export
 BGM <- function(X,R, K = 2,tolerance = 0.001, nmax = 100){
 

@@ -33,7 +33,7 @@ It's a scalor or a vector.}
 \item{impvar}{a numeric scalar which is position of variables in VAR equation.
 If it's \code{NULL} that is default, its postion is the last.}
 
-\item{nhor}{IRF horizon, default is \code{NULL}}
+\item{nhor}{IRF horizon, default is \code{10}}
 
 \item{ci}{confidence interval, default is 0.8.}
 

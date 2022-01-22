@@ -11,31 +11,45 @@
 #' @param K the number of factors extraced from \code{X}.
 #' @param plag the lag order in the VAR equation.
 #' @param factorprior A list whose elements is named sets the prior for the factor equation.
-#'  \code{b0} is the prior of mean of \eqn{\beta},and \code{vb0} is the prior of the variance
+#'  \code{b0} is the prior of mean of regression coeffients \eqn{\beta},and \code{vb0} is the prior of the variance
 #'  of \eqn{\beta}, and \code{c0/2} and \code{d0/2} are prior pamameters of the variance of the error
 #'  \eqn{\sigma^{-2}}, and they are
 #'   the shape and scale parameters of Gamma distribution, respectively.
 #' @param varprior A list whose elements is named sets the prior of VAR equations.
-#'  \code{b0} is the prior of mean of \eqn{\beta}, and \code{vb0} is the prior
+#'  \code{b0} is the prior of mean of VAR coeffients \eqn{\beta}, and \code{vb0} is the prior
 #'  of the variance of \eqn{\beta}, it's a scalor that means priors of variance is same, or a
 #'  vector whoes length equals the length of \eqn{\beta}. \code{nu0} is the degree of freedom
-#' of Wishart distribution for \eqn{\Sigma^{-1}}, i.e., a shape parameter, and \code{s0^{-1}} is a
-#' scale parameter for the Wishart distribution, and it's a matrix whose
+#' of Wishart distribution for \eqn{\Sigma^{-1}}, i.e., a shape parameter, and \code{s0} is a inverse
+#' scale parameter for the Wishart distribution, and it's a matrix with
 #' \code{ncol(s0)=nrow(s0)=}the number of endogenous variables in VAR. If it's a scalor, it means
 #' the entry of the matrix is same. \code{mn} sets the Minesota prior. If
-#' \code{prior$mn$kappa0} is not \code{NULL}, \code{b0,vb0} is neglected.
-#' \code{'mn'} means Minnesota prior, and it's element \code{kappa0} controls the
+#' \code{varprior$mn$kappa0} is not \code{NULL}, \code{b0,vb0} is neglected.
+#' \code{mn}'s element \code{kappa0} controls the
 #' tightness of the prior variance for self-variables lag coefficients, the prior variance
 #' is \eqn{\kappa_0/lag^2}, another element \code{kappa1} controls the cross-variables lag
 #' coefficients spread, the prior variance is
-#' \eqn{\frac{\kappa_0\kappa_1}{lag^2}\frac{\sigma_i^2}{\sigma_j^2}, i\ne j}.
-#' @param nburn the amount of the first random draws discarded in MCMC
-#' @param nrep the amount of the saved draws in MCMC
+#' \eqn{\frac{\kappa_0\kappa_1}{lag^2}\frac{\sigma_m^2}{\sigma_n^2}, m\ne n}. See details.
+#' @param nburn the number of the first random draws discarded in MCMC.
+#' @param nrep the number of the saved draws in MCMC.
 #' @param standardize Wheather standardize? We suggest it does, because in the function
 #' VAR equation and factor equaion both don't include intercept.
 #' @param ncores the number of CPU cores in parallel computations.
 #'
-#'
+#' @details Here we simply state the prior distribution setting of VAR. VAR could be writen by (koop and Korobilis, 2010),
+#' \deqn{y_t= Z_t\beta + \varepsilon_t, \varepsilon_t\sim N(0,\Sigma)}
+#' You can write down it according to data matrix,
+#' \deqn{Y= Z\beta + \varepsilon, \varepsilon\sim N(0,I\otimes \Sigma)}
+#' where \eqn{Y = (y_1,y_2,\cdots, y_T)',Z=(Z_,Z_2,\cdots,Z_T)',\varepsilon=(\varepsilon_1,\varepsilon_2,\cdots,\varepsilon_T)}. We assume that prior distribution of \eqn{\beta} and \eqn{\Sigma^{-1}} is,
+#' \deqn{\beta\sim N(b0,V_{b0}), \Sigma^{-1}\sim W(S_0^{-1},\nu_0)}
+#' Or you can set the Minesota prior for variance of \eqn{\beta}, for example,
+#' for the mth equaion in \eqn{y_t= Z_t\beta + \varepsilon_t},
+#' \itemize{
+#' \item \eqn{\frac{\kappa_0}{l^2},l} is lag order, for won lags of endogenous variables
+#' \item \eqn{\frac{\kappa_0\kappa_1}{l^2}\frac{\sigma_m^2}{\sigma_n^2}, m\ne n},for lags of other endogenous variables in the mth equation,
+#' where \eqn{\sigma_m} is the standard error for residuals of the mth equaion.
+#' }
+#' Based on the priors, you could get corresponding post distribution for the paramters
+#'  by Markov Chain Monte Carlo (MCMC) algorithm.  More details, see koop and Korobilis (2010).
 #'
 #' @return \describe{
 #' \item{varrlt}{A list. The estimation results of VAR including estimated coefficients
@@ -48,12 +62,15 @@
 #' }
 #'
 #'
+#'
 #' @references
 #' 1. Bernanke, B.S., J. Boivin and P. Eliasz, Measuring the Eeefects of Monetary Policy:
 #' A Factor-Augmented Vector Autoregressive (FAVAR) Approach. Quarterly Journal of Economics, 2005. 120(1): p. 387-422.
 #'
 #' 2. Boivin, J., M.P. Giannoni and I. Mihov, Sticky Prices and Monetary Policy: Evidence
 #'  from Disaggregated US Data. American Economic Review, 2009. 99(1): p. 350-384.
+#'
+#' 3.	Koop, G. and D. Korobilis, Bayesian Multivariate Time Series Methods for Empirical Macroeconomics. 2010: Now Publishers.
 #'
 #' @export
 #' @examples
@@ -63,7 +80,7 @@
 #'              factorprior = list(b0 = 0, vb0 = NULL, c0 = 0.01, d0 = 0.01),
 #'              varprior = list(b0 = 0,vb0 = 10, nu0 = 0, s0 = 0),
 #'              nrep = 500, nburn = 100, K = 2, plag = 2)
-#'  # print FAVAR estimation results
+#' # print FAVAR estimation results
 #' summary(fit,xvar = c(3,5))
 #' # plot impulse response figure
 #' library(patchwork)

@@ -15,7 +15,7 @@
 #' It's a scalor or a vector.
 #' @param impvar a numeric scalar which is position of variables in VAR equation.
 #' If it's \code{NULL} that is default, its postion is the last.
-#' @param nhor IRF horizon, default is \code{NULL}
+#' @param nhor IRF horizon, default is \code{10}
 #' @param ci confidence interval, default is 0.8.
 #' @param showplot whether show figure. \code{TRUE} is default.
 #'

@@ -33,15 +33,15 @@ devtools::install_github("common2016/FAVAR")
 
 This is a basic example which shows you how to estimate a FAVAR model:
 
-```{r example}
+```{r example, eval=FALSE}
 library(FAVAR)
 ## basic example code
 data('regdata')
 fit <- FAVAR(Y = regdata[,c("Inflation","Unemployment","Fed_funds")],
-              X = regdata[,1:115], slowcode = slowcode,fctmethod = 'BBE',
-              varprior = list(b0 = 0,vb0 = 10, nu0 = 0, s0 = 0),
-              factorprior = list(b0 = 0, vb0 = NULL, c0 = 0.01, d0 = 0.01),
-              nrep = 500, nburn = 100, K = 2, plag = 2)
+             X = regdata[,1:115], slowcode = slowcode,fctmethod = 'BBE',
+             factorprior = list(b0 = 0, vb0 = NULL, c0 = 0.01, d0 = 0.01), 
+             varprior = list(b0 = 0,vb0 = 10, nu0 = 0, s0 = 0),
+             nrep = 500, nburn = 100, K = 2, plag = 2)
 # print FAVAR estimation results
 summary(fit,xvar = c(3,5))
 # plot impulse response figure

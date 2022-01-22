@@ -3,7 +3,7 @@ context('Estimate FAVAR')
 data('regdata')
 fit <- FAVAR(Y = regdata[,c("Inflation","Unemployment","Fed_funds")],
              X = regdata[,1:115], slowcode = slowcode,fctmethod = 'BBE',
-             factorprior = list(b0 = 0, B0 = NULL, c0 = 0.01, d0 = 0.01),
+             factorprior = list(b0 = 0, vb0 = NULL, c0 = 0.01, d0 = 0.01),
              varprior = list(b0 = 0,vb0 = 0, nu0 = 0, s0 = 0),
              nrep = 500, nburn = 100, K = 2, plag = 2,  ncores = 1)
 dtirf <- irf(fit,resvar = 2, tcode = tcode)

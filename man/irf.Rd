@@ -44,7 +44,7 @@ A list containing 2 elements. The first element is a object from \code{ggplot2::
 second element is raw data for IRF.
 }
 \description{
-Impulse Response Function for FAVAR
+Based on a shock to one standard deviation, compute the IRF.
 }
 \examples{
 # see FAVAR function

@@ -1,5 +1,8 @@
 #' Impulse Response Function for FAVAR
 #'
+#'
+#' Based on a shock to one standard deviation, compute the IRF.
+#'
 #' @param fit FAVAR object.
 #' @param irftype \code{'orth'} is orthogonal IRF, and \code{'gen'} is generalized
 #' IRF.

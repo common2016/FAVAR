@@ -12,14 +12,23 @@
 #' @param plag the lag order in the VAR equation.
 #' @param factorprior A list whose elements is named sets the prior for the factor equation.
 #'  \code{b0} is the prior of mean of \eqn{\beta},and \code{vb0} is the prior of the variance
-#'  of \eqn{\beta}, and \code{c0/2} and \code{d0/2} are the shape and scale parameters of Gamma distribution, respectively.
+#'  of \eqn{\beta}, and \code{c0/2} and \code{d0/2} are prior pamameters of the variance of the error
+#'  \eqn{\sigma^{-2}}, and they are
+#'   the shape and scale parameters of Gamma distribution, respectively.
 #' @param varprior A list whose elements is named sets the prior of VAR equations.
 #'  \code{b0} is the prior of mean of \eqn{\beta}, and \code{vb0} is the prior
-#'  of the variance of \eqn{\beta}. \code{nu0} is the degree of freedom
-#' of Wishart distribution for \eqn{\Sigma^{-1}}, i.e., a shape parameter, and \code{s0^{-1}} is
-#' scale parameters for the Wishart distribution. \code{mn} sets the Minesota prior. If
+#'  of the variance of \eqn{\beta}, it's a scalor that means priors of variance is same, or a
+#'  vector whoes length equals the length of \eqn{\beta}. \code{nu0} is the degree of freedom
+#' of Wishart distribution for \eqn{\Sigma^{-1}}, i.e., a shape parameter, and \code{s0^{-1}} is a
+#' scale parameter for the Wishart distribution, and it's a matrix whose
+#' \code{ncol(s0)=nrow(s0)=}the number of endogenous variables in VAR. If it's a scalor, it means
+#' the entry of the matrix is same. \code{mn} sets the Minesota prior. If
 #' \code{prior$mn$kappa0} is not \code{NULL}, \code{b0,vb0} is neglected.
-#' \code{'mn'} means Minnesota prior.
+#' \code{'mn'} means Minnesota prior, and it's element \code{kappa0} controls the
+#' tightness of the prior variance for self-variables lag coefficients, the prior variance
+#' is \eqn{\kappa_0/lag^2}, another element \code{kappa1} controls the cross-variables lag
+#' coefficients spread, the prior variance is
+#' \eqn{\frac{\kappa_0\kappa_1}{lag^2}\frac{\sigma_i^2}{\sigma_j^2}, i\ne j}.
 #' @param nburn the amount of the first random draws discarded in MCMC
 #' @param nrep the amount of the saved draws in MCMC
 #' @param standardize Wheather standardize? We suggest it does, because in the function
@@ -51,8 +60,8 @@
 #' data('regdata')
 #' fit <- FAVAR(Y = regdata[,c("Inflation","Unemployment","Fed_funds")],
 #'              X = regdata[,1:115], slowcode = slowcode,fctmethod = 'BBE',
+#'              factorprior = list(b0 = 0, vb0 = NULL, c0 = 0.01, d0 = 0.01),
 #'              varprior = list(b0 = 0,vb0 = 10, nu0 = 0, s0 = 0),
-#'              factorprior = list(b0 = 0, B0 = NULL, c0 = 0.01, d0 = 0.01),
 #'              nrep = 500, nburn = 100, K = 2, plag = 2)
 #'  # print FAVAR estimation results
 #' summary(fit,xvar = c(3,5))
@@ -60,7 +69,7 @@
 #' library(patchwork)
 #' irf(fit,resvar = c(2,9,10))
 FAVAR <- function(Y, X, fctmethod = 'BBE', slowcode,K = 2, plag = 2,
-                  factorprior = list(b0 = 0, B0 = NULL, c0 = 0.01, d0 = 0.01),
+                  factorprior = list(b0 = 0, vb0 = NULL, c0 = 0.01, d0 = 0.01),
                   varprior = list(b0 = 0,vb0 = 0, nu = 0, s = 0,
                                   mn = list(kappa0 = NULL, kappa1 = NULL)),
                   nburn = 5000, nrep = 15000,

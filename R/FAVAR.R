@@ -88,7 +88,7 @@
 #' irf(fit,resvar = c(2,9,10))
 FAVAR <- function(Y, X, fctmethod = 'BBE', slowcode,K = 2, plag = 2,
                   factorprior = list(b0 = 0, vb0 = NULL, c0 = 0.01, d0 = 0.01),
-                  varprior = list(b0 = 0,vb0 = 0, nu = 0, s = 0,
+                  varprior = list(b0 = 0,vb0 = 0, nu0 = 0, s0 = 0,
                                   mn = list(kappa0 = NULL, kappa1 = NULL)),
                   nburn = 5000, nrep = 15000,
                   standardize = TRUE, ncores = 1){

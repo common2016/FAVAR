@@ -51,7 +51,8 @@
 #' Based on the priors, you could get corresponding post distribution for the paramters
 #'  by Markov Chain Monte Carlo (MCMC) algorithm.  More details, see koop and Korobilis (2010).
 #'
-#' @return \describe{
+#' @return a class \code{favar}.
+#' \describe{
 #' \item{varrlt}{A list. The estimation results of VAR including estimated coefficients
 #'  \code{A}, their variance-covariance matrix \code{sigma}, and other statistical summary for \code{A}.}
 #' \item{Lamb}{A array with 3 dimension. and \code{Lamb[i,,]} is factor loading matrix

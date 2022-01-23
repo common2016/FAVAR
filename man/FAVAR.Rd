@@ -66,6 +66,7 @@ VAR equation and factor equaion both don't include intercept.}
 \item{ncores}{the number of CPU cores in parallel computations.}
 }
 \value{
+a class \code{favar}.
 \describe{
 \item{varrlt}{A list. The estimation results of VAR including estimated coefficients
 \code{A}, their variance-covariance matrix \code{sigma}, and other statistical summary for \code{A}.}

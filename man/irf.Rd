@@ -27,17 +27,19 @@ logarithm(\code{'ln'}) or the first difference of logarithm(\code{'Dln'}),
 the IRF needs to return to its level value, and you can set the pamameter.
 Default is \code{'level'}.}
 
-\item{resvar}{whose impulse response is computed? It's coloumn index in \code{XY}.
-It's a scalor or a vector.}
+\item{resvar}{It's coloumn indexs in \code{cbind(XY)} that specify response variables.
+It's a scalor or a vector. A change variable cause a change of another variable,
+and the former is viewed as impulse variable, the latter is viewed as response variable.}
 
-\item{impvar}{a numeric scalar which is position of variables in VAR equation.
+\item{impvar}{Specify a impulse variable. A numeric scalar which is position of variables in VAR equation.
 If it's \code{NULL} that is default, its postion is the last.}
 
-\item{nhor}{IRF horizon, default is \code{10}}
+\item{nhor}{IRF horizon, default is \code{10}.}
 
 \item{ci}{confidence interval, default is 0.8.}
 
-\item{showplot}{whether show figure. \code{TRUE} is default.}
+\item{showplot}{whether show figure. \code{TRUE} is default. If multiple pictures would be printed,
+the package \code{patchwork} is needed to be loaded.}
 }
 \value{
 A list containing 2 elements. The first element is a object from \code{ggplot2::ggplot}, the

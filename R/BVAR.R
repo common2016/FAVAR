@@ -53,6 +53,7 @@ BVAR <- function(data, plag =2, iter = 10000, burnin = 5000,
     a_v_i_prior <- ans$v_i
   }
   u_sigma_df_prior <- prior$nu0 # Prior degrees of freedom
+  if (is.null(prior$s0)) stop('you should set the prior of nu0 and s0')
   u_sigma_scale_prior <- matrix(prior$s0, k, k) # Prior covariance matrix
   u_sigma_df_post <- tnum + u_sigma_df_prior # Posterior degrees of freedom
 

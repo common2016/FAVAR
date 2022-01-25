@@ -33,7 +33,7 @@ devtools::install_github("common2016/FAVAR")
 
 This is a basic example which shows you how to estimate a FAVAR model:
 
-```{r example, eval=FALSE}
+```{r example}
 library(FAVAR)
 ## basic example code
 data('regdata')

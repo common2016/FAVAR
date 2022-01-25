@@ -21,5 +21,4 @@ coef.favar <- function(object,...){
   # get var ceofficients
 
   return(list(fct_loading = fct_loading, varcoef = object$varrlt$sumrlt$varcoef))
-
 }

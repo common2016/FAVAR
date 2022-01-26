@@ -24,15 +24,14 @@ Imports:
     bvartools,
     foreach,
     magrittr,
-    SimDesign,
     MCMCpack,
     coda,
     dplyr,
     doParallel,
-    vars,
-    Matrix,
-    patchwork
+    Matrix
 Depends: 
     R (>= 2.10)
 Suggests: 
-    testthat
+    testthat,
+    vars,
+    patchwork

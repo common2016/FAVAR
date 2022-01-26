@@ -106,9 +106,11 @@ fit <- FAVAR(Y = regdata[,c("Inflation","Unemployment","Fed_funds")],
              nrep = 500, nburn = 100, K = 2, plag = 2)
 # print FAVAR estimation results
 summary(fit,xvar = c(3,5))
+# or extract coefficients
+coef(fit)
 # plot impulse response figure
 library(patchwork)
-irf(fit,resvar = c(2,9,10))
+dt_irf <- irf(fit,resvar = c(2,9,10))
 }
 \references{
 \enumerate{

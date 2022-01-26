@@ -3,7 +3,7 @@
 \docType{data}
 \name{tcode}
 \alias{tcode}
-\title{Transformation Form for \code{X}}
+\title{Transformation Form for X}
 \format{
 An object of class \code{character} of length 118.
 }

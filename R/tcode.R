@@ -1,4 +1,4 @@
-#' Transformation Form for \code{X}
+#' Transformation Form for X
 #'
 #'
 #' Record the transformation form for the 1st cloumn through the 115th coloumn

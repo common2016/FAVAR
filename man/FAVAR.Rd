@@ -98,19 +98,19 @@ Based on the priors, you could get corresponding post distribution for the param
 by Markov Chain Monte Carlo (MCMC) algorithm.  More details, see koop and Korobilis (2010).
 }
 \examples{
-data('regdata')
-fit <- FAVAR(Y = regdata[,c("Inflation","Unemployment","Fed_funds")],
-             X = regdata[,1:115], slowcode = slowcode,fctmethod = 'BBE',
-             factorprior = list(b0 = 0, vb0 = NULL, c0 = 0.01, d0 = 0.01),
-             varprior = list(b0 = 0,vb0 = 10, nu0 = 0, s0 = 0),
-             nrep = 500, nburn = 100, K = 2, plag = 2)
-# print FAVAR estimation results
-summary(fit,xvar = c(3,5))
-# or extract coefficients
-coef(fit)
-# plot impulse response figure
-library(patchwork)
-dt_irf <- irf(fit,resvar = c(2,9,10))
+# data('regdata')
+# fit <- FAVAR(Y = regdata[,c("Inflation","Unemployment","Fed_funds")],
+#              X = regdata[,1:115], slowcode = slowcode,fctmethod = 'BBE',
+#              factorprior = list(b0 = 0, vb0 = NULL, c0 = 0.01, d0 = 0.01),
+#              varprior = list(b0 = 0,vb0 = 10, nu0 = 0, s0 = 0),
+#              nrep = 15000, nburn = 5000, K = 2, plag = 2)
+## print FAVAR estimation results
+# summary(fit,xvar = c(3,5))
+## or extract coefficients
+# coef(fit)
+## plot impulse response figure
+# library(patchwork)
+# dt_irf <- irf(fit,resvar = c(2,9,10))
 }
 \references{
 \enumerate{

@@ -1,5 +1,5 @@
 Package: FAVAR
-Title: Bayesian Analysis of a FAVAR model
+Title: Bayesian Analysis of a FAVAR Model
 Version: 0.1.0
 Authors@R: c(
     person(given = "Pu",

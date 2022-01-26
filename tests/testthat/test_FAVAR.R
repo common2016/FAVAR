@@ -5,7 +5,7 @@ fit <- FAVAR(Y = regdata[,c("Inflation","Unemployment","Fed_funds")],
              X = regdata[,1:115], slowcode = slowcode,fctmethod = 'BBE',
              factorprior = list(b0 = 0, vb0 = NULL, c0 = 0.01, d0 = 0.01),
              varprior = list(b0 = 0,vb0 = 0, nu0 = 0, s0 = 0),
-             nrep = 500, nburn = 100, K = 2, plag = 2,  ncores = 1)
+             nrep = 100, nburn = 10, K = 2, plag = 2,  ncores = 1)
 dtirf <- irf(fit,resvar = 2, tcode = tcode)
 
 lamb_tol <- sum((colMeans(fit$Lamb[,,5]) - c(-0.5431962, 0.7660636,0.1760928,  0.2045756, -0.3872807))^2)
@@ -27,7 +27,7 @@ irf_tol <- sum((rowMeans(sapply(dtirf$imp, function(x) x[2,])) -
 
 
 # test
-test_that('loading factor', expect_equal(lamb_tol,0))
+test_that('loading factor', expect_true(lamb_tol < 0.01))
 
 test_that('coefficients VAR', expect_true(varcoef_tol < 0.01))
 

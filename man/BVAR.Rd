@@ -41,5 +41,5 @@ means, standard errors, 0.25 quantiles and 0.975 quantiles of \code{A}.
 }
 }
 \description{
-Estimate a VAR base on bayesian method
+Estimate a VAR base on Bayesian method
 }

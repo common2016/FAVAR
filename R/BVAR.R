@@ -1,6 +1,6 @@
 #' Bayesian Estimation of VAR
 #'
-#' Estimate a VAR base on bayesian method
+#' Estimate a VAR base on Bayesian method
 #'
 #' @param data a \code{ts} object which include all endogenous variables in VAR
 #' @param plag a lag order in VAR

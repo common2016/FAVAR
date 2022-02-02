@@ -9,7 +9,7 @@
 #' @param prior a list whose elements is named. \code{b0} is the prior of mean of \eqn{\beta},
 #' and \code{vb0} is the prior of the variance of \eqn{\beta}. \code{nu0} is the degree of freedom
 #' of Wishart distribution for \eqn{\Sigma^{-1}}, i.e., a shape parameter, and \code{s0^{-1}} is
-#' scale parameters for the Wishart distribution. \code{mn} sets the Minesota prior. If
+#' scale parameters for the Wishart distribution. \code{mn} sets the Minnesota prior. If
 #' \code{prior$mn$kappa0} is not \code{NULL}, \code{b0,vb0} is neglected.
 #' @param ncores the number of CPU cores in parallel computations.
 #'

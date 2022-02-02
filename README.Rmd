@@ -53,5 +53,5 @@ ans <- irf(fit,resvar = c(2,9,10), tcode = tcode, nhor = 21, showplot = T)
 ## Reference
 
 
-- Bernanke, B.S., J. Boivin and P. Eliasz, Measuring the Eeefects of Monetary Policy: A Factor-Augmented Vector Autoregressive (FAVAR) Approach. Quarterly Journal of Economics, 2005. 120(1): p. 387-422.
+- Bernanke, B.S., J. Boivin and P. Eliasz, Measuring the Effects of Monetary Policy: A Factor-Augmented Vector Autoregressive (FAVAR) Approach. Quarterly Journal of Economics, 2005. 120(1): p. 387-422.
 

@@ -1,14 +1,14 @@
 #' Compute Impulse Response for Every Sample of MCMC
 #'
 #'
-#' @param i the ith sample in MCMC
+#' @param i the \eqn{i}th sample in MCMC
 #' @param varrlt estimation results for VAR equations, and it's got by \code{BayesVAR}.
 #' @param Lamb a array with 3 dimension. and \code{Lamb[i,,]} is factor loading matrix for factor equations.
 #' @param Ynum the \code{ncol(Y)}.
 #' @param type \code{'orth'} is orthogonal IRF, and \code{'gen'} is generalized
 #' IRF.
 #' @param impvar a numeric scalar which is position of variables in VAR equation.
-#' If it's \code{NULL} that is default, its postion is the last.
+#' If it's \code{NULL} that is default, its position is the last.
 #' @param nhor IRF horizon, default is \code{NULL}
 #'
 #' @return IRF matrix, the dimension is \code{ncol(Xmatrix) + ncol(Y)}x\code{nhor}.

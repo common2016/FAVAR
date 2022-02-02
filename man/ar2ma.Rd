@@ -7,25 +7,25 @@
 ar2ma(ar, p, n = 11, CharValue = T)
 }
 \arguments{
-\item{ar}{AR coefficients matrix which is k x kp dimenstion, k is numbers of variables,
+\item{ar}{AR coefficients matrix which is k x kp dimension, k is numbers of variables,
 and no constant.}
 
 \item{p}{lags orders of AR}
 
 \item{n}{lags orders of MA generated}
 
-\item{CharValue}{logitcal value, wheater compute character value}
+\item{CharValue}{logical value, whether compute character value}
 }
 \value{
 a matrix which is MA coefficients
 }
 \description{
-Convert AR coefficients to MA coefficients
+Convert auto regression (AR) coefficients to moving average (MA) coefficients
 }
 \details{
 the formula is,
 \deqn{A_s = F_1 * A_{s-1} + F_2 * A_{s-2} + ... + F_p * A_{s-p}}
-where A is MA coeffiencts, F is AR coeffiencts.
+where A is MA coefficients, F is AR coefficients.
 }
 \examples{
 require(vars)

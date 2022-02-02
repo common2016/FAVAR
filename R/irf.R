@@ -6,16 +6,16 @@
 #' @param fit FAVAR object.
 #' @param irftype \code{'orth'} is orthogonal IRF, and \code{'gen'} is generalized
 #' IRF.
-#' @param tcode a scalor \code{'level'} or a vector whose length equal \code{ncol(X)+ncol(Y)}.
+#' @param tcode a scalar \code{'level'} or a vector whose length equal \code{ncol(X)+ncol(Y)}.
 #' \code{X,Y} is the parameters of the \code{FAVAR} function. If the variable is taken the
 #' logarithm(\code{'ln'}) or the first difference of logarithm(\code{'Dln'}),
-#' the IRF needs to return to its level value, and you can set the pamameter.
+#' the IRF needs to return to its level value, and you can set the parameters.
 #' Default is \code{'level'}.
-#' @param resvar It's coloumn indexs in \code{cbind(XY)} that specify response variables.
-#' It's a scalor or a vector. A change variable cause a change of another variable,
+#' @param resvar It's column indexes in \code{cbind(XY)} that specify response variables.
+#' It's a scalar or a vector. A change variable cause a change of another variable,
 #'  and the former is viewed as impulse variable, the latter is viewed as response variable.
 #' @param impvar Specify a impulse variable. A numeric scalar which is position of variables in VAR equation.
-#' If it's \code{NULL} that is default, its postion is the last.
+#' If it's \code{NULL} that is default, its position is the last.
 #' @param nhor IRF horizon, default is \code{10}.
 #' @param ci confidence interval, default is 0.8.
 #' @param showplot whether show figure. \code{TRUE} is default. If multiple pictures would be printed,

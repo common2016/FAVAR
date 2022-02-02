@@ -5,10 +5,10 @@
 \alias{regdata}
 \title{Sample Data}
 \format{
-A matrix \code{regdata} with 190 rows and 118 varibles,
+A matrix \code{regdata} with 190 rows and 118 variables,
 \describe{
-\item{X}{\code{X} is the first coloumn through the 115th coloumn in \code{regdata}, a large macro data set}
-\item{Y}{\code{Y} is the 116th coloumn through the 118 coloumn in \code{regdata}, driving the dynamics of the economy}
+\item{X}{\code{X} is the first column through the 115th column in \code{regdata}, a large macro data set}
+\item{Y}{\code{Y} is the 116th column through the 118th column in \code{regdata}, driving the dynamics of the economy}
 }
 }
 \source{

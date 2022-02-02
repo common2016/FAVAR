@@ -7,22 +7,22 @@
 BGM(X, R, K = 2, tolerance = 0.001, nmax = 100)
 }
 \arguments{
-\item{X}{a large matrix from which principle components are extrated.}
+\item{X}{a large matrix from which principle components are extracted.}
 
-\item{R}{a numerica vector which we are interesting in, for example interest rates.}
+\item{R}{a numeric vector which we are interesting in, for example interest rates.}
 
-\item{K}{the number of extracted princple components.}
+\item{K}{the number of extracted principle components.}
 
 \item{tolerance}{the difference between factors when iterating.}
 
 \item{nmax}{the max iterations, see details.}
 }
 \value{
-the first K principa components, i.e. \eqn{F_t^{(n)}}, not containing the information \code{R}.
+the first K principle components, i.e. \eqn{F_t^{(n)}}, not containing the information \code{R}.
 }
 \description{
-\eqn{X} may include some information corralted with \eqn{R}. The function
-extract factors from \code{X} which is not corralated with \code{R} by iteration
+\eqn{X} may include some information related with \eqn{R}. The function
+extract factors from \code{X} which is not related with \code{R} by iteration
 based on Boivin et al. (2009).
 }
 \details{

@@ -1,14 +1,16 @@
-#' Generalized IRF
+#' Generalized Impulse Response Function (GIRF)
 #'
 #' Compute GIRF of linear VAR by Koop et al. (1996)
 #'
-#' @param ma a list, it's MA coeffients from \code{ar2ma}
-#' @param sig_u a cov matrix from VAR models. Note the order of variables in \code{sig_u}
+#' @param ma a list, it's MA coefficients from \code{ar2ma}
+#' @param sig_u a covariance matrix from VAR models. Note the order of variables in \code{sig_u}
 #' is same with one of \code{ma[[i]]}.
-#' @param imp_var a numerical scalor which specifies the impulse variable.
-#' @param unit \code{'sd'} is one standard devtiation shock which is default,
+#' @param imp_var a numerical scalar which specifies the impulse variable.
+#' @param unit \code{'sd'} is one standard deviation shock which is default,
 #'  and \code{'one'} is one unit shock.
-#' @return a data frame, its row is variables and its coloumn is horizons.
+#' @return a data frame, its row is variables and its column is horizons.
+#' @references Koop, G., M.H. Pesaran and S. Potter, Impulse Response Analysis
+#' in Nonlinear Multivariate Models. Journal of Econometrics, 1996. 74: p. 119-147.
 #' @importFrom  magrittr `%>%`
 
 

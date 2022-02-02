@@ -9,12 +9,12 @@
 \arguments{
 \item{object}{a class 'favar'.}
 
-\item{...}{additional arguments affecting the coeffiects produced.}
+\item{...}{additional arguments affecting the coefficients produced.}
 }
 \value{
 A list\describe{
-\item{fct_loading}{Factor laoding matrix in a factor equaion.}
-\item{varcoef}{regression coeffiects in VAR equations.}
+\item{fct_loading}{Factor loading matrix in a factor equation.}
+\item{varcoef}{regression coefficients in VAR equations.}
 }
 }
 \description{

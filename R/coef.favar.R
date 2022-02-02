@@ -2,11 +2,11 @@
 #'
 #'
 #' @param object a class 'favar'.
-#' @param ... additional arguments affecting the coeffiects produced.
+#' @param ... additional arguments affecting the coefficients produced.
 #'
 #' @return A list\describe{
-#' \item{fct_loading}{Factor laoding matrix in a factor equaion.}
-#' \item{varcoef}{regression coeffiects in VAR equations.}
+#' \item{fct_loading}{Factor loading matrix in a factor equation.}
+#' \item{varcoef}{regression coefficients in VAR equations.}
 #' }
 #' @export
 

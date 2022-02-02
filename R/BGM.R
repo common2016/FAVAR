@@ -1,12 +1,12 @@
 #' Separate \eqn{R} From \eqn{X}
 #'
-#' \eqn{X} may include some information corralted with \eqn{R}. The function
-#' extract factors from \code{X} which is not corralated with \code{R} by iteration
+#' \eqn{X} may include some information related with \eqn{R}. The function
+#' extract factors from \code{X} which is not related with \code{R} by iteration
 #' based on Boivin et al. (2009).
 #'
-#' @param X a large matrix from which principle components are extrated.
-#' @param R a numerica vector which we are interesting in, for example interest rates.
-#' @param K the number of extracted princple components.
+#' @param X a large matrix from which principle components are extracted.
+#' @param R a numeric vector which we are interesting in, for example interest rates.
+#' @param K the number of extracted principle components.
 #' @param tolerance the difference between factors when iterating.
 #' @param nmax the max iterations, see details.
 #' @details
@@ -24,7 +24,7 @@
 #' @references
 #' Boivin, J., M.P. Giannoni and I. Mihov, Sticky Prices and Monetary Policy: Evidence
 #'  from Disaggregated US Data. American Economic Review, 2009. 99(1): p. 350-384.
-#' @return the first K principa components, i.e. \eqn{F_t^{(n)}}, not containing the information \code{R}.
+#' @return the first K principle components, i.e. \eqn{F_t^{(n)}}, not containing the information \code{R}.
 #' @examples
 #' data('regdata')
 #' BGM(X = regdata[,1:115],R = regdata[,ncol(regdata)], K = 2)

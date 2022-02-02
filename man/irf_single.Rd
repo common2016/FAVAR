@@ -7,7 +7,7 @@
 irf_single(i, varrlt, Lamb, Ynum, type = "orth", impvar = 1, nhor)
 }
 \arguments{
-\item{i}{the ith sample in MCMC}
+\item{i}{the \eqn{i}th sample in MCMC}
 
 \item{varrlt}{estimation results for VAR equations, and it's got by \code{BayesVAR}.}
 
@@ -19,7 +19,7 @@ irf_single(i, varrlt, Lamb, Ynum, type = "orth", impvar = 1, nhor)
 IRF.}
 
 \item{impvar}{a numeric scalar which is position of variables in VAR equation.
-If it's \code{NULL} that is default, its postion is the last.}
+If it's \code{NULL} that is default, its position is the last.}
 
 \item{nhor}{IRF horizon, default is \code{NULL}}
 }

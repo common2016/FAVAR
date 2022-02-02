@@ -6,7 +6,7 @@
 
 * macOS 10.13.6 High Sierra, R-release, brew (based on `rhub::check()`, the 10th platform)
 
-* Windows Server 2022, R-devel, 64 bit (based on `rhub::check()`, the 18th platform)
+* Windows Server 2022, R-devel, 64 bit (based on `rhub::check()`(the 18th platform) and `check_win_devel()`)
 
   
 

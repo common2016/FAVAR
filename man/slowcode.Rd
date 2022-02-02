@@ -14,7 +14,7 @@ An object of class \code{logical} of length 115.
 slowcode
 }
 \description{
-A logic vector, record the variables that are the 1st cloumn through the 115th coloumn
+A logic vector, record the variables that are the 1st column through the 115th column
 in \code{regdata} is slow-moving or not.
 }
 \keyword{datasets}

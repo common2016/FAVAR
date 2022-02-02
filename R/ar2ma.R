@@ -1,13 +1,13 @@
 #' @title ar2ma
-#' @description  Convert AR coefficients to MA coefficients
-#' @param ar AR coefficients matrix which is k x kp dimenstion, k is numbers of variables,
+#' @description  Convert auto regression (AR) coefficients to moving average (MA) coefficients
+#' @param ar AR coefficients matrix which is k x kp dimension, k is numbers of variables,
 #'   and no constant.
 #' @param p lags orders of AR
 #' @param n lags orders of MA generated
-#' @param CharValue logitcal value, wheater compute character value
+#' @param CharValue logical value, whether compute character value
 #' @details the formula is,
 #'  \deqn{A_s = F_1 * A_{s-1} + F_2 * A_{s-2} + ... + F_p * A_{s-p}}
-#'   where A is MA coeffiencts, F is AR coeffiencts.
+#'   where A is MA coefficients, F is AR coefficients.
 #' @return a matrix which is MA coefficients
 #' @importFrom magrittr `%>%`
 #' @export

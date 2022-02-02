@@ -2,24 +2,28 @@
 % Please edit documentation in R/GI.R
 \name{GI}
 \alias{GI}
-\title{Generalized IRF}
+\title{Generalized Impulse Response Function (GIRF)}
 \usage{
 GI(ma, sig_u, imp_var = 1, unit = "sd")
 }
 \arguments{
-\item{ma}{a list, it's MA coeffients from \code{ar2ma}}
+\item{ma}{a list, it's MA coefficients from \code{ar2ma}}
 
-\item{sig_u}{a cov matrix from VAR models. Note the order of variables in \code{sig_u}
+\item{sig_u}{a covariance matrix from VAR models. Note the order of variables in \code{sig_u}
 is same with one of \code{ma[[i]]}.}
 
-\item{imp_var}{a numerical scalor which specifies the impulse variable.}
+\item{imp_var}{a numerical scalar which specifies the impulse variable.}
 
-\item{unit}{\code{'sd'} is one standard devtiation shock which is default,
+\item{unit}{\code{'sd'} is one standard deviation shock which is default,
 and \code{'one'} is one unit shock.}
 }
 \value{
-a data frame, its row is variables and its coloumn is horizons.
+a data frame, its row is variables and its column is horizons.
 }
 \description{
 Compute GIRF of linear VAR by Koop et al. (1996)
+}
+\references{
+Koop, G., M.H. Pesaran and S. Potter, Impulse Response Analysis
+in Nonlinear Multivariate Models. Journal of Econometrics, 1996. 74: p. 119-147.
 }

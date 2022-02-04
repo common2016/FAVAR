@@ -2,13 +2,13 @@
 #' @description  Convert auto regression (AR) coefficients to moving average (MA) coefficients
 #' @param ar AR coefficients matrix which is k x kp dimension, k is numbers of variables,
 #'   and no constant.
-#' @param p lags orders of AR
-#' @param n lags orders of MA generated
-#' @param CharValue logical value, whether compute character value
+#' @param p lags orders of AR.
+#' @param n lags orders of MA generated.
+#' @param CharValue logical value, whether compute character value.
 #' @details the formula is,
 #'  \deqn{A_s = F_1 * A_{s-1} + F_2 * A_{s-2} + ... + F_p * A_{s-p}}
 #'   where A is MA coefficients, F is AR coefficients.
-#' @return a matrix which is MA coefficients
+#' @return a matrix which is MA coefficients.
 #' @importFrom magrittr `%>%`
 #' @export
 #' @examples
@@ -18,7 +18,7 @@
 #' ar
 #' ar2ma(ar, p = 2)
 
-ar2ma <- function(ar,p,n = 11, CharValue = T){
+ar2ma <- function(ar,p,n = 11, CharValue = TRUE){
   # get ar coefficiets
   Fmr <- list()
   In <- list() # eye matrix

@@ -10,7 +10,13 @@ Authors@R: c(
     person(given = "Chen",
            family = "Chen",
            role = c("aut"),
-           email = "haoxi0906@163.com")       
+           email = "haoxi0906@163.com"),
+    person(given = "Gary",
+           family = "Koop",
+           role = "cph"),
+    person(given = "Dimitris",
+           family = "Korobilis",
+           role = "cph")
            )
 Description: Estimate a FAVAR model by a Bayesian method, based on Bernanke et al. (2005) <DOI:10.1162/0033553053327452>.
 License: GPL-3

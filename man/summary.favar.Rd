@@ -14,8 +14,11 @@ If it's \code{NULL}, estimation results for X = F + Y is not printed.}
 
 \item{...}{additional arguments affecting the summary produced.}
 }
+\value{
+No return value, called for side effects
+}
 \description{
-Print Results of FAVAR
+S3 method for class "favar".
 }
 \examples{
 # see FAVAR function

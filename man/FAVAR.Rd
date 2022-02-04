@@ -66,13 +66,13 @@ VAR equation and factor equation both don't include intercept.}
 \item{ncores}{the number of CPU cores in parallel computations.}
 }
 \value{
-a class \code{favar}.
+An object of class "favar" containing the following components:
 \describe{
 \item{varrlt}{A list. The estimation results of VAR including estimated coefficients
 \code{A}, their variance-covariance matrix \code{sigma}, and other statistical summary for \code{A}.}
 \item{Lamb}{A array with 3 dimension. and \code{Lamb[i,,]} is factor loading matrix
 for factor equations in the \eqn{i}th sample of MCMC.}
-\item{factorx}{Extracted factors from \code{X}}
+\item{factorx}{Extracted factors from \code{X}}.
 \item{model_info}{Model information containing \code{nburn,nrep,X,Y} and \code{p}, the number of endogenous variables
 in the VAR.}
 }
@@ -104,11 +104,11 @@ by Markov Chain Monte Carlo (MCMC) algorithm.  More details, see Koop and Korobi
 #              factorprior = list(b0 = 0, vb0 = NULL, c0 = 0.01, d0 = 0.01),
 #              varprior = list(b0 = 0,vb0 = 10, nu0 = 0, s0 = 0),
 #              nrep = 15000, nburn = 5000, K = 2, plag = 2)
-## print FAVAR estimation results
+##---- print FAVAR estimation results------
 # summary(fit,xvar = c(3,5))
-## or extract coefficients
+##---- or extract coefficients------
 # coef(fit)
-## plot impulse response figure
+##---- plot impulse response figure------
 # library(patchwork)
 # dt_irf <- irf(fit,resvar = c(2,9,10))
 }
@@ -120,4 +120,11 @@ A Factor-Augmented Vector Autoregressive (FAVAR) Approach. Quarterly Journal of 
 from Disaggregated US Data. American Economic Review, 2009. 99(1): p. 350-384.
 \item Koop, G. and D. Korobilis, Bayesian Multivariate Time Series Methods for Empirical Macroeconomics. 2010: Now Publishers.
 }
+}
+\seealso{
+\code{\link{summary.favar}}, \code{\link{coef.favar}} and \code{\link{irf}}. All of them are
+S3 methods of the "favar" object, and
+\code{summary.favar} that prints the estimation results of a FAVAR model, and
+\code{coef.favar} that extracts the coefficients in a FAVAR model, and
+\code{irf} that computes the impulse response in a FAVAR model.
 }

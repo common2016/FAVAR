@@ -4,20 +4,20 @@
 \alias{ar2ma}
 \title{ar2ma}
 \usage{
-ar2ma(ar, p, n = 11, CharValue = T)
+ar2ma(ar, p, n = 11, CharValue = TRUE)
 }
 \arguments{
 \item{ar}{AR coefficients matrix which is k x kp dimension, k is numbers of variables,
 and no constant.}
 
-\item{p}{lags orders of AR}
+\item{p}{lags orders of AR.}
 
-\item{n}{lags orders of MA generated}
+\item{n}{lags orders of MA generated.}
 
-\item{CharValue}{logical value, whether compute character value}
+\item{CharValue}{logical value, whether compute character value.}
 }
 \value{
-a matrix which is MA coefficients
+a matrix which is MA coefficients.
 }
 \description{
 Convert auto regression (AR) coefficients to moving average (MA) coefficients

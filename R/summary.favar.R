@@ -1,9 +1,12 @@
 #' Print Results of FAVAR
 #'
+#' @description S3 method for class "favar".
+#'
 #' @param object a object from function \code{FAVAR}.
 #' @param xvar a numeric vector, which variables in \code{X} was printed. It's a index.
 #' If it's \code{NULL}, estimation results for X = F + Y is not printed.
 #' @param ... additional arguments affecting the summary produced.
+#' @return No return value, called for side effects
 #'
 #' @examples
 #' # see FAVAR function
@@ -39,6 +42,6 @@ summary.favar <- function(object, xvar = NULL,...){
      cat('-------------\n')
     }
   }
-  # NextMethod('summary')
+  return(NULL)
 }
 

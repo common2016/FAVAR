@@ -7,7 +7,7 @@
 \method{summary}{favar}(object, xvar = NULL, ...)
 }
 \arguments{
-\item{object}{a object from function \code{FAVAR}.}
+\item{object}{a "favar" object from function \code{FAVAR}.}
 
 \item{xvar}{a numeric vector, which variables in \code{X} was printed. It's a index.
 If it's \code{NULL}, estimation results for X = F + Y is not printed.}

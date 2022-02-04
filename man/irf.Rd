@@ -16,7 +16,7 @@ irf(
 )
 }
 \arguments{
-\item{fit}{FAVAR object.}
+\item{fit}{a "favar" object.}
 
 \item{irftype}{\code{'orth'} is orthogonal IRF, and \code{'gen'} is generalized
 IRF.}

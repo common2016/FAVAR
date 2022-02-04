@@ -3,7 +3,7 @@
 #'
 #' Based on a shock to one standard deviation, compute the IRF.
 #'
-#' @param fit FAVAR object.
+#' @param fit a "favar" object.
 #' @param irftype \code{'orth'} is orthogonal IRF, and \code{'gen'} is generalized
 #' IRF.
 #' @param tcode a scalar \code{'level'} or a vector whose length equal \code{ncol(X)+ncol(Y)}.

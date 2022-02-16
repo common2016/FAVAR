@@ -8,9 +8,9 @@ fit <- FAVAR(Y = regdata[,c("Inflation","Unemployment","Fed_funds")],
              nrep = 100, nburn = 10, K = 2, plag = 2,  ncores = 1)
 dtirf <- irf(fit,resvar = 2, tcode = tcode)
 
-lamb_tol <- sum((colMeans(fit$Lamb[,,5]) - c(-0.5431962, 0.7660636,0.1760928,  0.2045756, -0.3872807))^2)
+lamb_tol <- sum((abs(colMeans(fit$Lamb[,,6])) - abs(c(0.8172659, 0.6471958, 0.2963342, 0.1737213, 0.2347369)))^2)
 
-varcoef_tol <- sum((rowMeans(fit$varrlt$A) - c(0.778129386, -0.603017504,  0.213206464,  0.325159327, -0.100403434,
+varcoef_tol <- sum((abs(rowMeans(fit$varrlt$A)) - abs(c(0.778129386, -0.603017504,  0.213206464,  0.325159327, -0.100403434,
                                       0.149940841,  0.853207800,  0.286029475, -0.321815773,  0.681410053,
                                       0.031195983,  0.009408599,  1.028526266, -0.031933855,  0.240291022,
                                     -0.212201285,  0.437870305, -0.024441733, 0.749676918,  0.130926541,
@@ -19,16 +19,13 @@ varcoef_tol <- sum((rowMeans(fit$varrlt$A) - c(0.778129386, -0.603017504,  0.213
                                     -0.048730709,  0.001875996,  0.061739936, 0.138572123, -0.370153282,
                                     -0.046645148,  0.121886463, -0.184829209,  0.024781678, -0.208729971,
                                     0.159108630, -0.416506794,  0.024704619,  0.198934484, -0.150351969,
-                                    -0.008916529,  0.014557877,  0.046474131,  0.025599617,  0.159949583))^2)
+                                    -0.008916529,  0.014557877,  0.046474131,  0.025599617,  0.159949583)))^2)
 
 irf_tol <- sum((rowMeans(sapply(dtirf$imp, function(x) x[2,])) -
   c(-0.06851129, -0.13232879, -0.32971814, -0.51434825, -0.64979011, -0.74314192,
     -0.80345666, -0.84062401, -0.86199900, -0.87239392))^2)
 
 # test
-if(length(grep('Big',devtools::session_info()[[1]][['os']])) != 1){
-  test_that('loading factor', expect_true(lamb_tol < 0.01))
-
-  test_that('coefficients VAR', expect_true(varcoef_tol < 0.01))
-}
+test_that('loading factor', expect_true(lamb_tol < 0.01))
+test_that('coefficients VAR', expect_true(varcoef_tol < 0.01))
 test_that('IRF', expect_true(irf_tol < 0.01))

@@ -1,6 +1,6 @@
 Package: FAVAR
 Title: Bayesian Analysis of a FAVAR Model
-Version: 0.1.1
+Version: 0.1.2
 Authors@R: c(
     person(given = "Pu",
            family = "Chen",

@@ -5,7 +5,7 @@ fit <- FAVAR(Y = regdata[,c("Inflation","Unemployment","Fed_funds")],
              X = regdata[,1:115], slowcode = slowcode,fctmethod = 'BBE',
              factorprior = list(b0 = 0, vb0 = NULL, c0 = 0.01, d0 = 0.01),
              varprior = list(b0 = 0,vb0 = 0, nu0 = 0, s0 = 0),
-             nrep = 100, nburn = 10, K = 2, plag = 2,  ncores = 1)
+             nrep = 1000, nburn = 100, K = 2, plag = 2,  ncores = 1)
 dtirf <- irf(fit,resvar = 2, tcode = tcode)
 
 lamb_tol <- sum((abs(colMeans(fit$Lamb[,,6])) - abs(c(0.8172659, 0.6471958, 0.2963342, 0.1737213, 0.2347369)))^2)

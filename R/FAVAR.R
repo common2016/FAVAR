@@ -6,7 +6,7 @@
 #' @param X a matrix. A large macro data set. The meanings of \code{X} and \code{Y} is same as ones of Bernanke et al. (2005).
 #' @param fctmethod \code{'BBE'} or \code{'BGM'}. \code{'BBE'}(default) means the factors extracted method by Bernanke et al. (2005),
 #' and \code{'BGM'} means the factors extracted method by Boivin et al. (2009).
-#' @param slowcode a logical vector that Identifies which columns of X are slow
+#' @param slowcode a logical vector that identifies which columns of X are slow
 #' moving. Only when \code{fctmethod} is set as \code{'BBE'}, \code{slowcode} is valid.
 #' @param K the number of factors extracted from \code{X}.
 #' @param plag the lag order in the VAR equation.
@@ -126,7 +126,7 @@ FAVAR <- function(Y, X, fctmethod = 'BBE', slowcode,K = 2, plag = 2,
   # estimate factor equations
   # prior on Li ~ N(o,I)
   ifelse (is.null(factorprior$B0),
-          Li_prvar <- 4 * matlab::eye(p),
+          Li_prvar <- 4 * eye(p),
           Li_prvar <- factorprior$B0)
 
   # regress per coloum of X on FY
@@ -136,14 +136,13 @@ FAVAR <- function(Y, X, fctmethod = 'BBE', slowcode,K = 2, plag = 2,
       ans <- MCMCpack::MCMCregress(dep ~ .-1, data = meddata, burnin = nburn, mcmc = nrep,
                                    B0 = B0, c0 = c0, d0 = d0, b0 = b0)
       Lamb <- ans[,1:(K + ncol(Y))]
-    } else Lamb <- matlab::repmat(L[n,],c(nrep,1))
+    } else Lamb <- repmat(L[n,],c(nrep,1))
     return(Lamb)
   }
   # parallel
   cl <- parallel::makeCluster(ncores)
   parallel::clusterEvalQ(cl,{
     library(MCMCpack)
-    library(matlab)
   }) %>% invisible()
   ans <- parallel::parLapply(cl, 1:ncol(X), factor_reg, Xmatrix = X, FY = FY, K = K, nburn = nburn,
                       nrep = nrep, b0 = factorprior$b0, B0 = Li_prvar,

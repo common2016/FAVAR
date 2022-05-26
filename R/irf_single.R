@@ -17,7 +17,7 @@
 
 irf_single <- function(i,varrlt, Lamb, Ynum, type = 'orth',impvar = 1, nhor){
   # get information
-  p <- nrow(varrlt$sigma) %>% sqrt() # the number of endogenous variables in VAR
+  p <- sqrt(nrow(varrlt$sigma)) # the number of endogenous variables in VAR
   plag <- nrow(varrlt$A)/(p^2) # the lag order of VAR
   PHI_mat <- matrix(varrlt$A[,i],nrow = p, byrow = FALSE)
   a_sigma <- matrix(varrlt$sigma[,i], nrow = p)
@@ -32,14 +32,14 @@ irf_single <- function(i,varrlt, Lamb, Ynum, type = 'orth',impvar = 1, nhor){
     d <- diag(diag(shock))
     shock <- solve(d) %*% shock
 
-    impresp <- matlab::zeros(p,p*nhor)
+    impresp <- zeros(p,p*nhor)
     impresp[1:p,1:p] <- shock
     for (j in 1:(nhor-1)){
       impresp[,(j*p+1):((j+1)*p)] <- macoef[[j]]  %*% shock
     }
 
     # select the jj+p coloumn in every period
-    imp_m <- matlab::zeros(p,nhor)
+    imp_m <- zeros(p,nhor)
     jj <- impvar - p
     for (ij in 1:nhor){
       jj <- jj + p
@@ -52,7 +52,7 @@ irf_single <- function(i,varrlt, Lamb, Ynum, type = 'orth',impvar = 1, nhor){
 
 
 
-  irf <- matlab::zeros(Xnum + Ynum,nhor)
+  irf <- zeros(Xnum + Ynum,nhor)
   irf[1:Xnum,] <- Lamb[1:Xnum,] %*% imp_m
   irf[(nrow(irf)-Ynum+1):nrow(irf),] <- imp_m[(nrow(imp_m)-Ynum+1):nrow(imp_m),]
   return(irf)

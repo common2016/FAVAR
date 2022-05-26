@@ -42,6 +42,5 @@ summary.favar <- function(object, xvar = NULL,...){
      cat('-------------\n')
     }
   }
-  return(NULL)
 }
 

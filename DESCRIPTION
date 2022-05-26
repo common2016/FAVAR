@@ -1,6 +1,6 @@
 Package: FAVAR
 Title: Bayesian Analysis of a FAVAR Model
-Version: 0.1.2
+Version: 0.1.3
 Authors@R: c(
     person(given = "Pu",
            family = "Chen",
@@ -25,7 +25,6 @@ LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
 Imports: 
-    matlab,
     ggplot2,
     bvartools,
     foreach,

@@ -18,7 +18,7 @@ GI <- function(ma, sig_u, imp_var = 1, unit = 'sd'){
 
   # the t period IRF
   GI_single <- function(ans, imp_var){
-    ell <- matlab::zeros(nrow(ans),1)
+    ell <- zeros(nrow(ans),1)
     ell[imp_var] <- 1
     # GVAR toolbox p140, A.22
     if (unit %in% 'sd'){
